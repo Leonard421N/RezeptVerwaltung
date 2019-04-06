@@ -68,11 +68,16 @@ public class Recepi {
             }
         }
 
+        ArrayList<Float> tempIngredients = new ArrayList<>(ingredients.values());
+        int index = 0;
+        Float tempAmount;
         for (UUID id: ingredients.keySet()) {
+            tempAmount = tempIngredients.get(index);
             tempIngredient = Manager.getInstance().getIngredientPerUUID(id);
             if(tempIngredient != null) {
-                tempPrice += tempIngredient.getPrice();
+                tempPrice += tempIngredient.getBasePrice()*tempAmount;
             }
+            index++;
         }
 
         this.price = tempPrice;
