@@ -12,8 +12,8 @@ public class Manager {
 
     private static Manager instance;
 
-    private ArrayList<Recepi> recepis; //load somewhere
-    private ArrayList<Ingredient> ingredients; //same here
+    private ArrayList<Recepi> allRecepis; //load somewhere
+    private ArrayList<Ingredient> allIngredients; //same here
 
     private Manager() {}
 
@@ -24,13 +24,13 @@ public class Manager {
         return Manager.instance;
     }
 
-    public ArrayList<Recepi> getRecepis() {
-        return recepis;
+    public ArrayList<Recepi> getAllRecepis() {
+        return allRecepis;
     }
 
     @Nullable
     public Recepi getRecepiPerUUID(UUID id) {
-        for (Recepi recepi: recepis) {
+        for (Recepi recepi: allRecepis) {
             if(id.equals(recepi.getId())) {
                 return recepi;
             }
@@ -40,7 +40,7 @@ public class Manager {
 
     @Nullable
     public Ingredient getIngredientPerUUID(UUID id) {
-        for (Ingredient ingredient: ingredients) {
+        for (Ingredient ingredient: allIngredients) {
             if(id.equals(ingredient.getId())) {
                 return ingredient;
             }

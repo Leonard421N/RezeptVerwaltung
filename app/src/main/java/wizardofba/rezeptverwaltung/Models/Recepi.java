@@ -13,10 +13,10 @@ public class Recepi {
     private UUID id;
 
     private HashMap<UUID, Float> ingredients;
-    private ArrayList<UUID> recipes;
+    private HashMap<UUID, Float> recipes;
     private String name;
     private Uri picUri;
-    private float price;
+    private Float price;
     private String description;
 
     public Recepi() {
@@ -34,7 +34,7 @@ public class Recepi {
             this.id = UUID.randomUUID();
         }
         this.ingredients = new HashMap<UUID, Float>();
-        this.recipes = new ArrayList<UUID>();
+        this.recipes = new HashMap<UUID, Float>();
         this.price = 0f;
     }
 
@@ -43,7 +43,11 @@ public class Recepi {
     }
 
     public void addRecipe(UUID id) {
-        this.recipes.add(id);
+        this.recipes.put(id, 1.0f);
+    }
+
+    public void addRecipe(UUID id, Float amount) {
+        this.recipes.put(id, amount);
     }
 
     public void removeIngredient(UUID id) {
@@ -60,17 +64,22 @@ public class Recepi {
         float tempPrice = 0f;
         Recepi tempRecepi;
         Ingredient tempIngredient;
+        int index = 0;
 
-        for(UUID id: recipes) {
+
+        ArrayList<Float> tempRecepis = new ArrayList<>(recipes.values());
+        Float tempAmount;
+        for(UUID id: recipes.keySet()) {
+            tempAmount = tempRecepis.get(index);
             tempRecepi = Manager.getInstance().getRecepiPerUUID(id);
             if(tempRecepi != null) {
-                tempPrice += tempRecepi.getPrice();
+                tempPrice += tempRecepi.getPrice()*tempAmount;
             }
+            index++;
         }
 
+        index = 0;
         ArrayList<Float> tempIngredients = new ArrayList<>(ingredients.values());
-        int index = 0;
-        Float tempAmount;
         for (UUID id: ingredients.keySet()) {
             tempAmount = tempIngredients.get(index);
             tempIngredient = Manager.getInstance().getIngredientPerUUID(id);
@@ -103,11 +112,11 @@ public class Recepi {
         this.name = name;
     }
 
-    public ArrayList<UUID> getRecipes() {
+    public HashMap<UUID, Float> getRecipes() {
         return this.recipes;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
