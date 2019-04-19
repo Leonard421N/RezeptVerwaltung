@@ -1,5 +1,6 @@
 package wizardofba.rezeptverwaltung;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -38,14 +39,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 switch(CURRENT_STATE) {
+
                 case STATE_RECEPIS:
+                    /*
                     Manager.getInstance().addRecepi(new Recepi("Kekse", 2.1f));
                     recepiAdapter.notifyDataChanged();
                     recyclerView.scrollToPosition(recepiAdapter.getItemCount()-1);
+                    */
+                    Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+                    startActivity(intent);
                     break;
+
                 case STATE_INGREDIENTS:
                     break;
-            }
+
+                }
             }
         });
 
