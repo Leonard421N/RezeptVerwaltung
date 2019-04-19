@@ -15,7 +15,16 @@ public class Manager {
     private ArrayList<Recepi> allRecepis; //load somewhere
     private ArrayList<Ingredient> allIngredients; //same here
 
-    private Manager() {}
+    private Manager() {
+
+        allRecepis = new ArrayList<>();
+        allIngredients = new ArrayList<>();
+
+        Recepi example1 = new Recepi("Kaffee", 5.0f);
+        Recepi example2 = new Recepi("Pommes", 1.0f);
+        allRecepis.add(example1);
+        allRecepis.add(example2);
+    }
 
     public static synchronized Manager getInstance() {
         if(Manager.instance == null) {

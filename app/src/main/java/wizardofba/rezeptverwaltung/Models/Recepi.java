@@ -29,6 +29,13 @@ public class Recepi {
         this.name = name;
     }
 
+    public Recepi(String name, Float price) {
+        initClass();
+
+        this.name = name;
+        this.price = price;
+    }
+
     private void initClass() {
         if(id == null) {
             this.id = UUID.randomUUID();
