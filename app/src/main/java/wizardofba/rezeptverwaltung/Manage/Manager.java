@@ -20,10 +20,11 @@ public class Manager {
         allRecepis = new ArrayList<>();
         allIngredients = new ArrayList<>();
 
-        Recepi example1 = new Recepi("Kaffee", 5.0f);
-        Recepi example2 = new Recepi("Pommes", 1.0f);
-        allRecepis.add(example1);
-        allRecepis.add(example2);
+        allRecepis.add(new Recepi("Kaffee", 1.0f));
+        allRecepis.add(new Recepi("Pommes", 2.0f));
+        allRecepis.add(new Recepi("Schwarzwälder Kirschtorte", 42.10f));
+        allRecepis.add(new Recepi("Currywurst mit Pommes", 4.0f));
+        allRecepis.add(new Recepi("Räuberteller", 0.0f));
     }
 
     public static synchronized Manager getInstance() {
