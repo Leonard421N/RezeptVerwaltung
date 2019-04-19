@@ -3,12 +3,16 @@ package wizardofba.rezeptverwaltung;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 
+import wizardofba.rezeptverwaltung.Manage.Manager;
 import wizardofba.rezeptverwaltung.Manage.RecepiAdapter;
+import wizardofba.rezeptverwaltung.Models.Recepi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecepiAdapter recepiAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton addFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        addFab = (FloatingActionButton) findViewById(R.id.fab_add);
+
+        addFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch(CURRENT_STATE) {
+                case STATE_RECEPIS:
+                    Manager.getInstance().addRecepi(new Recepi("Kekse", 2.1f));
+                    recepiAdapter.notifyDataChanged();
+                    recyclerView.scrollToPosition(recepiAdapter.getItemCount()-1);
+                    break;
+                case STATE_INGREDIENTS:
+                    break;
+            }
+            }
+        });
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

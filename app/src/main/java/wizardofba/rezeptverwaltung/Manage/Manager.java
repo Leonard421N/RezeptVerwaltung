@@ -34,8 +34,20 @@ public class Manager {
         return Manager.instance;
     }
 
-    public ArrayList<Recepi> getAllRecepis() {
+    ArrayList<Recepi> getAllRecepis() {
         return allRecepis;
+    }
+
+    public void addRecepi(Recepi recepi) {
+        allRecepis.add(recepi);
+    }
+    
+    private void removeRecepi(UUID id) {
+        for (Recepi recepi: allRecepis) {
+            if(id.equals(recepi.getId())) {
+                allRecepis.remove(recepi);
+            }
+        }
     }
 
     @Nullable

@@ -41,12 +41,19 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
         mRecepis = Manager.getInstance().getAllRecepis();
     }
 
+    public void notifyDataChanged() {
+        mRecepis = Manager.getInstance().getAllRecepis();
+        this.notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public RecepiAdapter.RecepiAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_cardview, viewGroup, false);
         return new RecepiAdapterViewHolder(v);
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull RecepiAdapter.RecepiAdapterViewHolder viewHolder, int i) {

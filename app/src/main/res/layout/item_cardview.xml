@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        android:elevation="@dimen/cardview_default_elevation">
+        android:elevation="@dimen/cardview_default_elevation"
+        android:clickable="true"
+        android:focusable="true">
 
         <RelativeLayout
             android:layout_width="match_parent"

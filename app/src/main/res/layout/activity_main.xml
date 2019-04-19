@@ -32,6 +32,15 @@
             android:layout_alignParentTop="true"
             android:layout_alignTop="@id/navigation"/>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_add_white_24dp"/>
+
     </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>
