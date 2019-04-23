@@ -42,18 +42,18 @@ public class Manager {
         allRecepis.add(recepi);
     }
     
-    private void removeRecepi(UUID id) {
+    private void removeRecepi(String id) {
         for (Recepi recepi: allRecepis) {
-            if(id.equals(recepi.getId())) {
+            if(id.equals(recepi.getRecepiID())) {
                 allRecepis.remove(recepi);
             }
         }
     }
 
     @Nullable
-    public Recepi getRecepiPerUUID(UUID id) {
+    public Recepi getRecepiPerUUID(String id) {
         for (Recepi recepi: allRecepis) {
-            if(id.equals(recepi.getId())) {
+            if(id.equals(recepi.getRecepiID())) {
                 return recepi;
             }
         }
@@ -61,9 +61,9 @@ public class Manager {
     }
 
     @Nullable
-    public Ingredient getIngredientPerUUID(UUID id) {
+    public Ingredient getIngredientPerUUID(String id) {
         for (Ingredient ingredient: allIngredients) {
-            if(id.equals(ingredient.getId())) {
+            if(id.equals(ingredient.getIngredientID())) {
                 return ingredient;
             }
         }

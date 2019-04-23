@@ -62,8 +62,8 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
         viewHolder.pricetag.setText(String.format("%s€", mRecepis.get(i).getPrice().toString()));
     }
 
-    public UUID getId(int position) {
-        return mRecepis.get(position).getId();
+    public String getId(int position) {
+        return mRecepis.get(position).getRecepiID();
     }
 
     @Override

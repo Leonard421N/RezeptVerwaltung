@@ -1,39 +1,39 @@
 package wizardofba.rezeptverwaltung.Models;
 
-import android.net.Uri;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import java.util.UUID;
 
+@Entity
 public class Ingredient {
 
-    private UUID id;
+    @NonNull
+    @PrimaryKey
+    private String ingredientID = UUID.randomUUID().toString();
 
     private String name;
+    @TypeConverters(IngredientPriceConverter.class)
     private Pair<Float, Float> price;
-    private Uri picUri;
+    private String picUri;
     private String description;
 
     public Ingredient() {
-        initClass();
     }
-    public Ingredient(String name) {
-        initClass();
 
+    @Ignore
+    public Ingredient(String name) {
         this.name = name;
     }
 
+    @Ignore
     public Ingredient(String name, float amount, float price) {
-        initClass();
-
         this.name = name;
         this.price = new Pair<>(amount, price);
-    }
-
-    private void initClass() {
-        if(id == null) {
-            this.id = UUID.randomUUID();
-        }
     }
 
 
@@ -43,8 +43,9 @@ public class Ingredient {
         return this.price.second/this.price.first;
     }
 
-    public UUID getId() {
-        return id;
+    @NonNull
+    public String getIngredientID() {
+        return ingredientID;
     }
 
     public String getName() {
@@ -65,6 +66,18 @@ public class Ingredient {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setIngredientID(@NonNull String ingredientID) {
+        this.ingredientID = ingredientID;
+    }
+
+    public void setPicUri(String picUri) {
+        this.picUri = picUri;
+    }
+
+    public String getPicUri() {
+        return picUri;
     }
 
     public void setDescription(String description) {

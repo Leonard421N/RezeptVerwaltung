@@ -1,6 +1,10 @@
 package wizardofba.rezeptverwaltung.Models;
 
-import android.net.Uri;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,14 +12,19 @@ import java.util.UUID;
 
 import wizardofba.rezeptverwaltung.Manage.Manager;
 
+@Entity
 public class Recepi {
 
-    private UUID id;
+    @NonNull
+    @PrimaryKey
+    private String recepiID = UUID.randomUUID().toString();
 
-    private HashMap<UUID, Float> ingredients;
-    private HashMap<UUID, Float> recipes;
+    @TypeConverters(RecepiHashMapConverter.class)
+    private HashMap<String, Float> ingredients;
+    @TypeConverters(RecepiHashMapConverter.class)
+    private HashMap<String, Float> recipes;
     private String name;
-    private Uri picUri;
+    private String picUri;
     private Float price;
     private String description;
 
@@ -23,12 +32,14 @@ public class Recepi {
         initClass();
     }
 
+    @Ignore
     public Recepi(String name) {
         initClass();
 
         this.name = name;
     }
 
+    @Ignore
     public Recepi(String name, Float price) {
         initClass();
 
@@ -37,29 +48,26 @@ public class Recepi {
     }
 
     private void initClass() {
-        if(id == null) {
-            this.id = UUID.randomUUID();
-        }
-        this.ingredients = new HashMap<UUID, Float>();
-        this.recipes = new HashMap<UUID, Float>();
+        this.ingredients = new HashMap<String, Float>();
+        this.recipes = new HashMap<String, Float>();
         this.price = 0f;
     }
 
-    public void addIngredient(UUID ingr, Float amount) {
+    public void addIngredient(String ingr, Float amount) {
         this.ingredients.put(ingr, amount);
     }
 
-    public void addRecipe(UUID id) {
+    public void addRecipe(String id) {
         this.recipes.put(id, 1.0f);
     }
 
-    public void addRecipe(UUID id, Float amount) {
+    public void addRecipe(String id, Float amount) {
         this.recipes.put(id, amount);
     }
 
-    public void removeIngredient(UUID id) {
+    public void removeIngredient(String id) {
         if(!ingredients.isEmpty()) {
-            for (UUID i: ingredients.keySet()) {
+            for (String i: ingredients.keySet()) {
                 if(i.equals(id)) {
                     ingredients.remove(i);
                 }
@@ -76,7 +84,7 @@ public class Recepi {
 
         ArrayList<Float> tempRecepis = new ArrayList<>(recipes.values());
         Float tempAmount;
-        for(UUID id: recipes.keySet()) {
+        for(String id: recipes.keySet()) {
             tempAmount = tempRecepis.get(index);
             tempRecepi = Manager.getInstance().getRecepiPerUUID(id);
             if(tempRecepi != null) {
@@ -87,7 +95,7 @@ public class Recepi {
 
         index = 0;
         ArrayList<Float> tempIngredients = new ArrayList<>(ingredients.values());
-        for (UUID id: ingredients.keySet()) {
+        for (String id: ingredients.keySet()) {
             tempAmount = tempIngredients.get(index);
             tempIngredient = Manager.getInstance().getIngredientPerUUID(id);
             if(tempIngredient != null) {
@@ -99,16 +107,16 @@ public class Recepi {
         this.price = tempPrice;
     }
 
-    public Uri getPicUri() {
+    public String getPicUri() {
         return picUri;
     }
 
-    public void setPicUri(Uri picUri) {
+    public void setPicUri(String picUri) {
         this.picUri = picUri;
     }
 
-    public UUID getId() {
-        return id;
+    public String getRecepiID() {
+        return recepiID;
     }
 
     public String getName() {
@@ -119,7 +127,7 @@ public class Recepi {
         this.name = name;
     }
 
-    public HashMap<UUID, Float> getRecipes() {
+    public HashMap<String, Float> getRecipes() {
         return this.recipes;
     }
 
@@ -133,5 +141,25 @@ public class Recepi {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setRecepiID(@NonNull String recepiID) {
+        this.recepiID = recepiID;
+    }
+
+    public HashMap<String, Float> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(HashMap<String, Float> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setRecipes(HashMap<String, Float> recipes) {
+        this.recipes = recipes;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }
