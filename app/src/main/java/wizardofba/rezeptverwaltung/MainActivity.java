@@ -1,5 +1,6 @@
 package wizardofba.rezeptverwaltung;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,17 +12,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
-import wizardofba.rezeptverwaltung.Manage.Manager;
 import wizardofba.rezeptverwaltung.Manage.RecepiAdapter;
-import wizardofba.rezeptverwaltung.Models.Recepi;
+import wizardofba.rezeptverwaltung.Manage.RecepiDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String DATABASE_NAME = "recepis_db";
     public static int  CURRENT_STATE = 0;
     public static final int STATE_RECEPIS = 0;
     public static final int STATE_INGREDIENTS = 1;
     public static final int STATE_SETTINGS = 2;
 
+    private RecepiDatabase recepiDatabase;
     private RecyclerView recyclerView;
     private RecepiAdapter recepiAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -31,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recepiDatabase = Room.databaseBuilder(getApplicationContext(),
+                RecepiDatabase.class, DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
