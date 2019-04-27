@@ -14,12 +14,20 @@ public class RecepiHashMapConverter {
 
         HashMap<String, Float> erg = new HashMap<String, Float>();
 
-        List<String> hashmapAsString = Arrays.asList(list.split("\\s*:\\s*;"));
+        if(!list.equals("")) {
 
-        for(int i = 0; i < hashmapAsString.size();) {
+            List<String> hashmapAsString = Arrays.asList(list.split("\\s*:\\s*;"));
 
-            erg.put(hashmapAsString.get(i), Float.valueOf(hashmapAsString.get(i+1)));
-            i += 2;
+            int size = hashmapAsString.size();
+
+            if (size > 0) {
+
+                for (int i = 0; i < size; ) {
+
+                    erg.put(hashmapAsString.get(i), Float.valueOf(hashmapAsString.get(i + 1)));
+                    i += 2;
+                }
+            }
         }
         return erg;
     }

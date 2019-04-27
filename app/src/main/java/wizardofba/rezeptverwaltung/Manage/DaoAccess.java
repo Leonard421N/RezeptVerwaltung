@@ -19,7 +19,9 @@ public interface DaoAccess {
     @Insert
     void insertMultipleRecepis (List<Recepi> recepiList);
     @Query("SELECT * FROM Recepi WHERE recepiID = :recepiID")
-    Recepi fetchOneMoviesbyRecepiID (int recepiID);
+    Recepi fetchOneRecepisbyRecepiID (int recepiID);
+    @Query("SELECT * FROM Recepi")
+    List<Recepi> fetchAllRecepis();
     @Update
     void updateRecepi (Recepi recepi);
     @Delete
@@ -30,7 +32,9 @@ public interface DaoAccess {
     @Insert
     void insertMultipleIngredients (List<Ingredient> ingredientList);
     @Query("SELECT * FROM Ingredient WHERE ingredientID = :ingredientID")
-    Ingredient fetchOneMoviesbyIngredientID (int ingredientID);
+    Ingredient fetchOneIngredientsbyIngredientID (int ingredientID);
+    @Query("SELECT * FROM Ingredient")
+    List<Ingredient> fetchAllIngredients();
     @Update
     void updateIngredient (Ingredient ingredient);
     @Delete

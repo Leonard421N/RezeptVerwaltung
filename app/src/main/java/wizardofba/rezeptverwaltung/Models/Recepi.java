@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import wizardofba.rezeptverwaltung.Manage.Manager;
+import wizardofba.rezeptverwaltung.MainActivity;
 
 @Entity
 public class Recepi {
@@ -86,7 +86,7 @@ public class Recepi {
         Float tempAmount;
         for(String id: recipes.keySet()) {
             tempAmount = tempRecepis.get(index);
-            tempRecepi = Manager.getInstance().getRecepiPerUUID(id);
+            tempRecepi = MainActivity.getManager().getRecepiPerUUID(id);
             if(tempRecepi != null) {
                 tempPrice += tempRecepi.getPrice()*tempAmount;
             }
@@ -97,7 +97,7 @@ public class Recepi {
         ArrayList<Float> tempIngredients = new ArrayList<>(ingredients.values());
         for (String id: ingredients.keySet()) {
             tempAmount = tempIngredients.get(index);
-            tempIngredient = Manager.getInstance().getIngredientPerUUID(id);
+            tempIngredient = MainActivity.getManager().getIngredientPerUUID(id);
             if(tempIngredient != null) {
                 tempPrice += tempIngredient.getBasePrice()*tempAmount;
             }

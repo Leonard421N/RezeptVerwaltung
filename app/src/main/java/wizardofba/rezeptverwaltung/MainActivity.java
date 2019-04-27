@@ -1,6 +1,5 @@
 package wizardofba.rezeptverwaltung;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,20 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
+import wizardofba.rezeptverwaltung.Manage.Manager;
 import wizardofba.rezeptverwaltung.Manage.RecepiAdapter;
-import wizardofba.rezeptverwaltung.Manage.RecepiDatabase;
+import wizardofba.rezeptverwaltung.Models.Recepi;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String DATABASE_NAME = "recepis_db";
     public static int  CURRENT_STATE = 0;
     public static final int STATE_RECEPIS = 0;
     public static final int STATE_INGREDIENTS = 1;
     public static final int STATE_SETTINGS = 2;
 
-    private RecepiDatabase recepiDatabase;
+    private static Manager manager;
     private RecyclerView recyclerView;
-    private RecepiAdapter recepiAdapter;
+    private static RecepiAdapter recepiAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton addFab;
 
@@ -34,11 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recepiDatabase = Room.databaseBuilder(getApplicationContext(),
-                RecepiDatabase.class, DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .build();
-
+        manager = Manager.getInstance(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
 
@@ -47,18 +42,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch(CURRENT_STATE) {
 
-                case STATE_RECEPIS:
-                    /*
-                    Manager.getInstance().addRecepi(new Recepi("Kekse", 2.1f));
-                    recepiAdapter.notifyDataChanged();
-                    recyclerView.scrollToPosition(recepiAdapter.getItemCount()-1);
-                    */
-                    Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
-                    startActivity(intent);
-                    break;
+                    case STATE_RECEPIS:
+                        
+                        getManager().addRecepi(new Recepi("Kekse", 2.1f));
+                        recepiAdapter.notifyDataChanged();
+                        recyclerView.scrollToPosition(recepiAdapter.getItemCount());
+                        /*
+                        Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+                        startActivity(intent);
+                        */
+                        break;
 
-                case STATE_INGREDIENTS:
-                    break;
+                    case STATE_INGREDIENTS:
+                        break;
 
                 }
             }
@@ -70,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         recepiAdapter = new RecepiAdapter();
         //TODO load Data
         recyclerView.setAdapter(recepiAdapter);
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
@@ -96,6 +91,14 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    public static void notifyUpdate() {
+        recepiAdapter.notifyDataChanged();
+    }
+
+    public static Manager getManager() {
+        return manager;
+    }
 
     private void fillRecyclerView() {
 

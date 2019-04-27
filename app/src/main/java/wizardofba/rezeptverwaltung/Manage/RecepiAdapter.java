@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
+import wizardofba.rezeptverwaltung.MainActivity;
 import wizardofba.rezeptverwaltung.Models.Recepi;
 import wizardofba.rezeptverwaltung.R;
 
 public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdapterViewHolder> {
 
-    private ArrayList<Recepi> mRecepis;
+    private List<Recepi> mRecepis;
 
     public static class RecepiAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -38,11 +38,11 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public RecepiAdapter() {
-        mRecepis = Manager.getInstance().getAllRecepis();
+        mRecepis = MainActivity.getManager().getAllRecepis();
     }
 
     public void notifyDataChanged() {
-        mRecepis = Manager.getInstance().getAllRecepis();
+        mRecepis = MainActivity.getManager().getAllRecepis();
         this.notifyDataSetChanged();
     }
 
