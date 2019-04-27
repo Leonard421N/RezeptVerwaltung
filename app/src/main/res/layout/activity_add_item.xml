@@ -18,10 +18,22 @@
         android:textSize="18sp"/>
 
     <EditText
-        android:id="@+id/add_item_edit_name"
+        android:id="@+id/add_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/add_item_title_name"
-        android:hint="Name"/>
+        android:hint="Name"
+        android:inputType="text"
+        tools:ignore="Autofill" />
+
+    <Button
+        android:id="@+id/add_item_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speichern"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="20dp"/>
 
 </android.support.constraint.ConstraintLayout>

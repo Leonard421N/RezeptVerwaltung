@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         manager = Manager.getInstance(this);
+        recepiAdapter = new RecepiAdapter();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
 
@@ -43,14 +44,13 @@ public class MainActivity extends AppCompatActivity {
                 switch(CURRENT_STATE) {
 
                     case STATE_RECEPIS:
-                        
-                        getManager().addRecepi(new Recepi("Kekse", 2.1f));
-                        recepiAdapter.notifyDataChanged();
-                        recyclerView.scrollToPosition(recepiAdapter.getItemCount());
                         /*
-                        Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
-                        startActivity(intent);
+                        getManager().addRecepi(new Recepi("Kekse", 2.1f));
+                        notifyUpdate();
+                        recyclerView.scrollToPosition(recepiAdapter.getItemCount());
                         */
+                        Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+                        startActivityForResult(intent, RESULT_FIRST_USER);
                         break;
 
                     case STATE_INGREDIENTS:
@@ -63,11 +63,20 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        recepiAdapter = new RecepiAdapter();
         //TODO load Data
         recyclerView.setAdapter(recepiAdapter);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode == RESULT_FIRST_USER){
+            manager.addRecepi(new Recepi(data.getStringExtra("name")));
+        }
+        notifyUpdate();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

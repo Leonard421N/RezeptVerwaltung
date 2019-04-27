@@ -17,7 +17,7 @@ import wizardofba.rezeptverwaltung.R;
 
 public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdapterViewHolder> {
 
-    private List<Recepi> mRecepis;
+    private static List<Recepi> mRecepis;
 
     public static class RecepiAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -26,13 +26,25 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
         public ImageView picture;
         public TextView pricetag;
 
-        public RecepiAdapterViewHolder(View itemView) {
+        public RecepiAdapterViewHolder(final View itemView) {
             super(itemView);
 
             this.cardView = (CardView) itemView.findViewById(R.id.card_view);
             this.name = (TextView) itemView.findViewById(R.id.item_name);
             this.picture = (ImageView) itemView.findViewById(R.id.pic);
             this.pricetag = (TextView) itemView.findViewById(R.id.price_tag);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    /**
+                     * JUST FOR TESTING
+                     * */
+                    MainActivity.getManager().removeRecepi(mRecepis.get(getPosition()));
+                    //MainActivity.notifyUpdate();
+
+                }
+            });
         }
     }
 
@@ -43,7 +55,7 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
 
     public void notifyDataChanged() {
         mRecepis = MainActivity.getManager().getAllRecepis();
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     @NonNull

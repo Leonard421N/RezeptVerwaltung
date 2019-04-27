@@ -49,7 +49,7 @@ public class Manager {
         return Manager.instance;
     }
 
-    private void loadDatabase() {
+    public void loadDatabase() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -60,25 +60,42 @@ public class Manager {
     }
 
     public void addRecepi(final Recepi recepi) {
-        new Thread(new Runnable() {
+
+        Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
                 allRecepis.add(recepi);
                 recepiDatabase.daoAccess().insertOnlySingleRecepi(recepi);
             }
-        }) .start();
+        });
+        current.start();
+        try {
+            current.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        MainActivity.notifyUpdate();
+    }
+
+    public void removeRecepi(final Recepi recepi) {
+        Thread current = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                allRecepis.remove(recepi);
+                recepiDatabase.daoAccess().deleteRecepi(recepi);
+            }
+        });
+        current.start();
+        try {
+            current.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        MainActivity.notifyUpdate();
     }
 
     List<Recepi> getAllRecepis() {
         return allRecepis;
-    }
-    
-    private void removeRecepi(String id) {
-        for (Recepi recepi: allRecepis) {
-            if(id.equals(recepi.getRecepiID())) {
-                allRecepis.remove(recepi);
-            }
-        }
     }
 
     @Nullable
