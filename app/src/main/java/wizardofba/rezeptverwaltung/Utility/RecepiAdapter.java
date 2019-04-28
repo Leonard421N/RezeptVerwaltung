@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Manage;
+package wizardofba.rezeptverwaltung.Utility;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -40,7 +40,7 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
                     /**
                      * JUST FOR TESTING
                      * */
-                    MainActivity.getManager().removeRecepi(mRecepis.get(getPosition()));
+                    //MainActivity.getManager().removeRecepi(mRecepis.get(getPosition()));
                     //MainActivity.notifyUpdate();
 
                 }

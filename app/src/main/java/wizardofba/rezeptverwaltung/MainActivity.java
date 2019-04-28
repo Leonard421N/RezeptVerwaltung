@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import wizardofba.rezeptverwaltung.Manage.Manager;
-import wizardofba.rezeptverwaltung.Manage.RecepiAdapter;
+import wizardofba.rezeptverwaltung.Utility.RecepiAdapter;
 import wizardofba.rezeptverwaltung.Models.Recepi;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         manager = Manager.getInstance(this);
         recepiAdapter = new RecepiAdapter();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recepiAdapter);
+
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
 
         addFab.setOnClickListener(new View.OnClickListener() {
@@ -60,11 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        //TODO load Data
-        recyclerView.setAdapter(recepiAdapter);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }

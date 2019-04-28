@@ -9,6 +9,8 @@ import android.util.Pair;
 
 import java.util.UUID;
 
+import wizardofba.rezeptverwaltung.Utility.IngredientPriceConverter;
+
 @Entity
 public class Ingredient {
 

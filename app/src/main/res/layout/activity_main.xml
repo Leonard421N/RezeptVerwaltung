@@ -11,9 +11,7 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
+        android:background="@android:color/white"
         app:menu="@menu/navigation"
         android:layout_alignParentBottom="true"/>
 
@@ -26,11 +24,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_alignTop="@id/navigation"
             android:scrollbars="vertical"
-            android:overScrollMode="ifContentScrolls"
+            android:overScrollMode="always"
             android:nestedScrollingEnabled="true"/>
 
         <android.support.design.widget.FloatingActionButton

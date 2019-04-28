@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import wizardofba.rezeptverwaltung.MainActivity;
+import wizardofba.rezeptverwaltung.Utility.RecepiHashMapConverter;
 
 @Entity
 public class Recepi {

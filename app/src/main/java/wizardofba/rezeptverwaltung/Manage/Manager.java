@@ -33,13 +33,15 @@ public class Manager {
                 .build();
 
         loadDatabase();
-        /*
-        allRecepis.add(new Recepi("Kaffee", 1.0f));
-        allRecepis.add(new Recepi("Pommes", 2.0f));
-        allRecepis.add(new Recepi("Schwarzwälder Kirschtorte", 42.10f));
-        allRecepis.add(new Recepi("Currywurst mit Pommes", 4.0f));
-        allRecepis.add(new Recepi("Räuberteller", 0.0f));
-        */
+        //TODO: load all ingredients, selectable in recepis
+        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
+        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
+        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
+        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
+        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
+        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
+        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
+        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
     }
 
     public static synchronized Manager getInstance(Context context) {
@@ -94,8 +96,12 @@ public class Manager {
         MainActivity.notifyUpdate();
     }
 
-    List<Recepi> getAllRecepis() {
+    public List<Recepi> getAllRecepis() {
         return allRecepis;
+    }
+
+    public List<Ingredient> getAllIngredients() {
+        return allIngredients;
     }
 
     @Nullable
