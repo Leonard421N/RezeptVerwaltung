@@ -10,7 +10,7 @@
     android:clipToPadding="false">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/add_item_forms_container"
+        android:id="@+id/add_and_edit_ingredient_forms_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -19,7 +19,7 @@
         android:elevation="4dp">
 
         <TextView
-            android:id="@+id/add_item_title_name"
+            android:id="@+id/add_and_edit_ingredient_title_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,10 +31,10 @@
             android:textSize="18sp"/>
 
         <EditText
-            android:id="@+id/add_item_name"
+            android:id="@+id/add_and_edit_ingredient_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/add_item_title_name"
+            app:layout_constraintTop_toBottomOf="@id/add_and_edit_ingredient_title_name"
             android:hint="Name"
             android:imeOptions="actionDone"
             android:singleLine="true"
@@ -42,27 +42,27 @@
             tools:ignore="Autofill" />
 
         <ImageView
-            android:id="@+id/add_item_picture"
+            android:id="@+id/add_and_edit_ingredient_picture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/border"
             app:srcCompat="@drawable/ic_add_a_photo_black_120dp"
             android:scaleType="fitCenter"
-            app:layout_constraintTop_toBottomOf="@id/add_item_name"
+            app:layout_constraintTop_toBottomOf="@id/add_and_edit_ingredient_name"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <TextView
-            android:id="@+id/add_item_ingredients_title"
+            android:id="@+id/add_and_edit_ingredients_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
+            android:text="Price and Amount"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:paddingBottom="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_item_picture"
+            app:layout_constraintTop_toBottomOf="@id/add_and_edit_ingredient_picture"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/colorCardViewText"
             android:textSize="18sp"/>
@@ -80,26 +80,67 @@
     </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
-        android:id="@+id/add_item_ingredients_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/add_item_forms_container">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_below="@id/add_and_edit_ingredient_forms_container">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_add_item"
+        <RelativeLayout
+            android:id="@+id/add_and_edit_ingredient_price_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:foregroundGravity="center"
-            android:overScrollMode="always"
-            android:nestedScrollingEnabled="true"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/add_and_edit_ingredient_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:hint="0.42"
+                android:textAlignment="textEnd"
+                android:inputType="numberDecimal"
+                android:textSize="42sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/add_and_edit_ingredient_price"
+                android:text="€"
+                android:textSize="42sp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/add_and_edit_ingredient_amount_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_and_edit_ingredient_price_container">
+
+            <EditText
+                android:id="@+id/add_and_edit_ingredient_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:inputType="numberDecimal"
+                android:textAlignment="textEnd"
+                android:hint="0.42"
+                android:textSize="42sp" />
+
+            <Spinner
+                android:id="@+id/add_and_edit_ingredient_amount_unit_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/add_and_edit_ingredient_amount" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_item_button_save"
+        android:id="@+id/add_and_edit_ingredient_button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_save_white_24dp"

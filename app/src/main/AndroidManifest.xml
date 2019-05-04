@@ -11,8 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".AddItemActivity"
-            android:windowSoftInputMode="adjustNothing|stateUnchanged"/>
+        <activity android:name=".AddAndEditIngredient"></activity>
+        <activity
+            android:name=".AddItemActivity"
+            android:windowSoftInputMode="adjustNothing|stateUnchanged" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

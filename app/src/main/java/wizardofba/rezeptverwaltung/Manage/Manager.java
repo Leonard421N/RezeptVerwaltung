@@ -18,7 +18,7 @@ public class Manager {
 
     private RecepiDatabase recepiDatabase;
     private List<Recepi> allRecepis; //load somewhere
-    private ArrayList<Ingredient> allIngredients; //same here
+    private List<Ingredient> allIngredients; //same here
     private Context mainContext;
 
     private Manager(Context context) {
@@ -33,15 +33,6 @@ public class Manager {
                 .build();
 
         loadDatabase();
-        //TODO: load all ingredients, selectable in recepis
-        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
-        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
-        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
-        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
-        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
-        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
-        allIngredients.add(new Ingredient("Kaffee", 1.0f, 1.0f));
-        allIngredients.add(new Ingredient("Pommes", 2.0f, 1.0f));
     }
 
     public static synchronized Manager getInstance(Context context) {
@@ -56,6 +47,7 @@ public class Manager {
             @Override
             public void run() {
                 allRecepis = recepiDatabase.daoAccess().fetchAllRecepis();
+                allIngredients = recepiDatabase.daoAccess().fetchAllIngredients();
                 MainActivity.notifyUpdate();
             }
         }).start();
@@ -68,6 +60,24 @@ public class Manager {
             public void run() {
                 allRecepis.add(recepi);
                 recepiDatabase.daoAccess().insertOnlySingleRecepi(recepi);
+            }
+        });
+        current.start();
+        try {
+            current.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        MainActivity.notifyUpdate();
+    }
+
+    public void addIngredient(final Ingredient ingredient) {
+
+        Thread current = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                allIngredients.add(ingredient);
+                recepiDatabase.daoAccess().insertOnlySingleIngredient(ingredient);
             }
         });
         current.start();

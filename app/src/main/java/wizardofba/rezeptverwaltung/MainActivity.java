@@ -6,12 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
 import wizardofba.rezeptverwaltung.Manage.Manager;
+import wizardofba.rezeptverwaltung.Models.Ingredient;
+import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
 import wizardofba.rezeptverwaltung.Utility.RecepiAdapter;
 import wizardofba.rezeptverwaltung.Models.Recepi;
 
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static Manager manager;
     private RecyclerView recyclerView;
     private static RecepiAdapter recepiAdapter;
+    private static IngredientAdapter ingredientAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton addFab;
 
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         manager = Manager.getInstance(this);
         recepiAdapter = new RecepiAdapter();
+        ingredientAdapter = new IngredientAdapter();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -45,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent;
+
                 switch(CURRENT_STATE) {
 
                     case STATE_RECEPIS:
@@ -53,11 +60,13 @@ public class MainActivity extends AppCompatActivity {
                         notifyUpdate();
                         recyclerView.scrollToPosition(recepiAdapter.getItemCount());
                         */
-                        Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+                        intent = new Intent(MainActivity.this, AddItemActivity.class);
                         startActivityForResult(intent, RESULT_FIRST_USER);
                         break;
 
                     case STATE_INGREDIENTS:
+                        intent = new Intent(MainActivity.this, AddAndEditIngredient.class);
+                        startActivityForResult(intent, 5);
                         break;
 
                 }
@@ -73,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(resultCode == RESULT_FIRST_USER){
             manager.addRecepi(new Recepi(data.getStringExtra("name")));
+        } else if(resultCode == 5) {
+            manager.addIngredient(new Ingredient(data.getStringExtra("name"),
+                    data.getFloatExtra("amount", 0f),
+                    data.getFloatExtra("price", 0f)));
         }
         notifyUpdate();
 
@@ -101,7 +114,16 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public static void notifyUpdate() {
-        recepiAdapter.notifyDataChanged();
+
+        switch(CURRENT_STATE) {
+
+            case STATE_RECEPIS:
+                recepiAdapter.notifyDataChanged();
+                break;
+            case STATE_INGREDIENTS:
+                ingredientAdapter.notifyDataChanged();
+                break;
+    }
     }
 
     public static Manager getManager() {
@@ -112,8 +134,14 @@ public class MainActivity extends AppCompatActivity {
 
         switch(CURRENT_STATE) {
             case STATE_RECEPIS:
+                layoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(recepiAdapter);
                 break;
             case STATE_INGREDIENTS:
+                layoutManager = new GridLayoutManager(this, 3);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(ingredientAdapter);
                 break;
         }
     }

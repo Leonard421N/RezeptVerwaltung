@@ -3,4 +3,12 @@
     <string name="title_home">Rezepte</string>
     <string name="title_ingredients">Zutaten</string>
     <string name="title_settings">Einstellungen</string>
+    <string-array name="string_array_units">
+        <item>EL</item>
+        <item>TL</item>
+        <item>ml</item>
+        <item>l</item>
+        <item>g</item>
+        <item>kg</item>
+    </string-array>
 </resources>
