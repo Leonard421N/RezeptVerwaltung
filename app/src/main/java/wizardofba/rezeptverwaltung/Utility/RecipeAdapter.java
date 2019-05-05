@@ -1,5 +1,6 @@
 package wizardofba.rezeptverwaltung.Utility;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import wizardofba.rezeptverwaltung.AddItemActivity;
 import wizardofba.rezeptverwaltung.MainActivity;
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.R;
@@ -37,12 +39,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /**
-                     * JUST FOR TESTING
-                     * */
-                    //MainActivity.getManager().removeRecepi(mRecipes.get(getPosition()));
-                    //MainActivity.notifyUpdate();
-
+                    Intent intent = new Intent(v.getContext(), AddItemActivity.class);
+                    intent.putExtra("id", mRecipes.get(getPosition()).getRecipeID());
+                    v.getContext().startActivity(intent);
                 }
             });
         }

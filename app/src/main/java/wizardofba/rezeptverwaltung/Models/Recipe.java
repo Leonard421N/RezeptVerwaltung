@@ -1,5 +1,6 @@
 package wizardofba.rezeptverwaltung.Models;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -24,9 +25,10 @@ public class Recipe {
     private HashMap<String, Float> ingredients;
     @TypeConverters(RecipeHashMapConverter.class)
     private HashMap<String, Float> recipes;
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    private byte[] image;
 
     private String name;
-    private String picUri;
     private Float price;
     private String description;
 
@@ -53,6 +55,7 @@ public class Recipe {
         this.ingredients = new HashMap<String, Float>();
         this.recipes = new HashMap<String, Float>();
         this.price = 0f;
+        this.description = "";
     }
 
     public void addIngredient(String ingr, Float amount) {
@@ -109,14 +112,6 @@ public class Recipe {
         this.price = tempPrice;
     }
 
-    public String getPicUri() {
-        return picUri;
-    }
-
-    public void setPicUri(String picUri) {
-        this.picUri = picUri;
-    }
-
     public String getRecipeID() {
         return recipeID;
     }
@@ -163,5 +158,13 @@ public class Recipe {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

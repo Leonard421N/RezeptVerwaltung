@@ -69,6 +69,28 @@ public class Manager {
         MainActivity.notifyUpdate();
     }
 
+    public void updateRecipe(final Recipe recipe) {
+
+        Thread current = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < allRecipes.size(); i++) {
+                    if(recipe.getRecipeID().equals(allRecipes.get(i))) {
+                        allRecipes.set(i, recipe);
+                    }
+                }
+                recipeDatabase.daoAccess().updateRecipe(recipe);
+            }
+        });
+        current.start();
+        try {
+            current.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        MainActivity.notifyUpdate();
+    }
+
     public void addIngredient(final Ingredient ingredient) {
 
         Thread current = new Thread(new Runnable() {
