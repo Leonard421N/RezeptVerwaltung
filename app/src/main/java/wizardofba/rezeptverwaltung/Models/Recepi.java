@@ -24,6 +24,7 @@ public class Recepi {
     private HashMap<String, Float> ingredients;
     @TypeConverters(RecepiHashMapConverter.class)
     private HashMap<String, Float> recipes;
+
     private String name;
     private String picUri;
     private Float price;

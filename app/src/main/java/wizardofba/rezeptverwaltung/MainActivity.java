@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private static RecepiAdapter recepiAdapter;
     private static IngredientAdapter ingredientAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private LinearLayoutManager linearLayoutManager;
+    private GridLayoutManager gridLayoutManager;
     private FloatingActionButton addFab;
 
     @Override
@@ -38,11 +39,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         manager = Manager.getInstance(this);
+
         recepiAdapter = new RecepiAdapter();
         ingredientAdapter = new IngredientAdapter();
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        gridLayoutManager = new GridLayoutManager(this, 3);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recepiAdapter);
 
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
@@ -88,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                     data.getFloatExtra("price", 0f)));
         }
         notifyUpdate();
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -134,16 +139,15 @@ public class MainActivity extends AppCompatActivity {
 
         switch(CURRENT_STATE) {
             case STATE_RECEPIS:
-                layoutManager = new LinearLayoutManager(this);
-                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(recepiAdapter);
                 break;
             case STATE_INGREDIENTS:
-                layoutManager = new GridLayoutManager(this, 3);
-                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setLayoutManager(gridLayoutManager);
                 recyclerView.setAdapter(ingredientAdapter);
                 break;
         }
+        notifyUpdate();
     }
 
 }

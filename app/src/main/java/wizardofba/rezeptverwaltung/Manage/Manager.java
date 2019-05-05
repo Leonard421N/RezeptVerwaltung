@@ -17,13 +17,11 @@ public class Manager {
     private static Manager instance;
 
     private RecepiDatabase recepiDatabase;
-    private List<Recepi> allRecepis; //load somewhere
-    private List<Ingredient> allIngredients; //same here
-    private Context mainContext;
+    private List<Recepi> allRecepis;
+    private List<Ingredient> allIngredients;
 
     private Manager(Context context) {
 
-        this.mainContext = context;
         allRecepis = new ArrayList<>();
         allIngredients = new ArrayList<>();
 

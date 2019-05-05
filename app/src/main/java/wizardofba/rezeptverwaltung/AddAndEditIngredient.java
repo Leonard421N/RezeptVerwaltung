@@ -53,8 +53,17 @@ public class AddAndEditIngredient extends AppCompatActivity {
             public void onClick(View v) {
 
                 String nameStr = name.getText().toString();
-                float priceFloat = Float.valueOf(price.getText().toString());
-                float amountFloat = Float.valueOf(amount.getText().toString());
+                float priceFloat;
+                float amountFloat;
+
+                try {
+                     priceFloat = Float.valueOf(price.getText().toString());
+                     amountFloat = Float.valueOf(amount.getText().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    priceFloat = 0f;
+                    amountFloat = 0f;
+                }
 
                 if(!nameStr.equals("")) {
                     Intent returnIntent = new Intent();

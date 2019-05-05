@@ -29,6 +29,7 @@
             android:layout_alignTop="@id/navigation"
             android:scrollbars="vertical"
             android:overScrollMode="always"
+            android:padding="4dp"
             android:nestedScrollingEnabled="true"/>
 
         <android.support.design.widget.FloatingActionButton

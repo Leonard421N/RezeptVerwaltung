@@ -18,9 +18,10 @@ public class Ingredient {
     @PrimaryKey
     private String ingredientID = UUID.randomUUID().toString();
 
-    private String name;
     @TypeConverters(IngredientPriceConverter.class)
     private Pair<Float, Float> price;
+
+    private String name;
     private String picUri;
     private String description;
 
