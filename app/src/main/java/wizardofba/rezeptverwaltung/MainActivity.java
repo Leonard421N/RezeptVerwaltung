@@ -14,9 +14,9 @@ import android.view.View;
 
 import wizardofba.rezeptverwaltung.Manage.Manager;
 import wizardofba.rezeptverwaltung.Models.Ingredient;
+import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
-import wizardofba.rezeptverwaltung.Utility.RecepiAdapter;
-import wizardofba.rezeptverwaltung.Models.Recepi;
+import wizardofba.rezeptverwaltung.Utility.RecipeAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static Manager manager;
     private RecyclerView recyclerView;
-    private static RecepiAdapter recepiAdapter;
+    private static RecipeAdapter recipeAdapter;
     private static IngredientAdapter ingredientAdapter;
     private LinearLayoutManager linearLayoutManager;
     private GridLayoutManager gridLayoutManager;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         manager = Manager.getInstance(this);
 
-        recepiAdapter = new RecepiAdapter();
+        recipeAdapter = new RecipeAdapter();
         ingredientAdapter = new IngredientAdapter();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         gridLayoutManager = new GridLayoutManager(this, 3);
 
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(recepiAdapter);
+        recyclerView.setAdapter(recipeAdapter);
 
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
 
@@ -62,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
                     case STATE_RECEPIS:
                         /*
-                        getManager().addRecepi(new Recepi("Kekse", 2.1f));
+                        getManager().addRecepi(new Recipe("Kekse", 2.1f));
                         notifyUpdate();
-                        recyclerView.scrollToPosition(recepiAdapter.getItemCount());
+                        recyclerView.scrollToPosition(recipeAdapter.getItemCount());
                         */
                         intent = new Intent(MainActivity.this, AddItemActivity.class);
                         startActivityForResult(intent, RESULT_FIRST_USER);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(resultCode == RESULT_FIRST_USER){
-            manager.addRecepi(new Recepi(data.getStringExtra("name")));
+            manager.addRecepi(new Recipe(data.getStringExtra("name")));
         } else if(resultCode == 5) {
             manager.addIngredient(new Ingredient(data.getStringExtra("name"),
                     data.getFloatExtra("amount", 0f),
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         switch(CURRENT_STATE) {
 
             case STATE_RECEPIS:
-                recepiAdapter.notifyDataChanged();
+                recipeAdapter.notifyDataChanged();
                 break;
             case STATE_INGREDIENTS:
                 ingredientAdapter.notifyDataChanged();
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         switch(CURRENT_STATE) {
             case STATE_RECEPIS:
                 recyclerView.setLayoutManager(linearLayoutManager);
-                recyclerView.setAdapter(recepiAdapter);
+                recyclerView.setAdapter(recipeAdapter);
                 break;
             case STATE_INGREDIENTS:
                 recyclerView.setLayoutManager(gridLayoutManager);

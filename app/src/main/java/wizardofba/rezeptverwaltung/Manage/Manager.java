@@ -9,24 +9,24 @@ import java.util.List;
 
 import wizardofba.rezeptverwaltung.MainActivity;
 import wizardofba.rezeptverwaltung.Models.Ingredient;
-import wizardofba.rezeptverwaltung.Models.Recepi;
+import wizardofba.rezeptverwaltung.Models.Recipe;
 
 public class Manager {
 
-    private static final String DATABASE_NAME = "recepis_db";
+    private static final String DATABASE_NAME = "recipes_db";
     private static Manager instance;
 
-    private RecepiDatabase recepiDatabase;
-    private List<Recepi> allRecepis;
+    private RecipeDatabase recipeDatabase;
+    private List<Recipe> allRecipes;
     private List<Ingredient> allIngredients;
 
     private Manager(Context context) {
 
-        allRecepis = new ArrayList<>();
+        allRecipes = new ArrayList<>();
         allIngredients = new ArrayList<>();
 
-        recepiDatabase = Room.databaseBuilder(context,
-                RecepiDatabase.class, DATABASE_NAME)
+        recipeDatabase = Room.databaseBuilder(context,
+                RecipeDatabase.class, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
                 .build();
 
@@ -44,20 +44,20 @@ public class Manager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                allRecepis = recepiDatabase.daoAccess().fetchAllRecepis();
-                allIngredients = recepiDatabase.daoAccess().fetchAllIngredients();
+                allRecipes = recipeDatabase.daoAccess().fetchAllRecipes();
+                allIngredients = recipeDatabase.daoAccess().fetchAllIngredients();
                 MainActivity.notifyUpdate();
             }
         }).start();
     }
 
-    public void addRecepi(final Recepi recepi) {
+    public void addRecepi(final Recipe recipe) {
 
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
-                allRecepis.add(recepi);
-                recepiDatabase.daoAccess().insertOnlySingleRecepi(recepi);
+                allRecipes.add(recipe);
+                recipeDatabase.daoAccess().insertOnlySingleRecipe(recipe);
             }
         });
         current.start();
@@ -75,7 +75,7 @@ public class Manager {
             @Override
             public void run() {
                 allIngredients.add(ingredient);
-                recepiDatabase.daoAccess().insertOnlySingleIngredient(ingredient);
+                recipeDatabase.daoAccess().insertOnlySingleIngredient(ingredient);
             }
         });
         current.start();
@@ -87,12 +87,12 @@ public class Manager {
         MainActivity.notifyUpdate();
     }
 
-    public void removeRecepi(final Recepi recepi) {
+    public void removeRecepi(final Recipe recipe) {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
-                allRecepis.remove(recepi);
-                recepiDatabase.daoAccess().deleteRecepi(recepi);
+                allRecipes.remove(recipe);
+                recipeDatabase.daoAccess().deleteRecipe(recipe);
             }
         });
         current.start();
@@ -104,8 +104,8 @@ public class Manager {
         MainActivity.notifyUpdate();
     }
 
-    public List<Recepi> getAllRecepis() {
-        return allRecepis;
+    public List<Recipe> getAllRecipes() {
+        return allRecipes;
     }
 
     public List<Ingredient> getAllIngredients() {
@@ -113,10 +113,10 @@ public class Manager {
     }
 
     @Nullable
-    public Recepi getRecepiPerUUID(String id) {
-        for (Recepi recepi: allRecepis) {
-            if(id.equals(recepi.getRecepiID())) {
-                return recepi;
+    public Recipe getRecepiPerUUID(String id) {
+        for (Recipe recipe : allRecipes) {
+            if(id.equals(recipe.getRecipeID())) {
+                return recipe;
             }
         }
         return null;

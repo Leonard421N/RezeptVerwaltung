@@ -9,23 +9,23 @@ import android.arch.persistence.room.Update;
 import java.util.List;
 
 import wizardofba.rezeptverwaltung.Models.Ingredient;
-import wizardofba.rezeptverwaltung.Models.Recepi;
+import wizardofba.rezeptverwaltung.Models.Recipe;
 
 @Dao
 public interface DaoAccess {
 
     @Insert
-    void insertOnlySingleRecepi(Recepi recepi);
+    void insertOnlySingleRecipe(Recipe recipe);
     @Insert
-    void insertMultipleRecepis (List<Recepi> recepiList);
-    @Query("SELECT * FROM Recepi WHERE recepiID = :recepiID")
-    Recepi fetchOneRecepisbyRecepiID (int recepiID);
-    @Query("SELECT * FROM Recepi")
-    List<Recepi> fetchAllRecepis();
+    void insertMultipleRecipes(List<Recipe> recipeList);
+    @Query("SELECT * FROM Recipe WHERE recipeID = :recipeID")
+    Recipe fetchOneRecepisbyRecipeID(int recipeID);
+    @Query("SELECT * FROM Recipe")
+    List<Recipe> fetchAllRecipes();
     @Update
-    void updateRecepi (Recepi recepi);
+    void updateRecipe(Recipe recipe);
     @Delete
-    void deleteRecepi (Recepi recepi);
+    void deleteRecipe(Recipe recipe);
 
     @Insert
     void insertOnlySingleIngredient(Ingredient ingredient);

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class RecepiHashMapConverter {
+public class RecipeHashMapConverter {
 
     @TypeConverter
     public static HashMap<String, Float> toHashMap(String list) {

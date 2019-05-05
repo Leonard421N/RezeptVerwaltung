@@ -18,6 +18,10 @@ import wizardofba.rezeptverwaltung.R;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder> {
 
     private static List<Ingredient> mIngredients;
+    private static List<Float> amounts;
+    private int CURRENT_STATE = 0;
+    private final int BASE_STATE = 0;
+    private final int CUSTOM_STATE = 1;
 
     public static class IngredientAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -25,6 +29,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         public TextView name;
         public ImageView picture;
         public TextView amount;
+        public TextView price;
 
         public IngredientAdapterViewHolder(final View itemView) {
             super(itemView);
@@ -33,6 +38,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             this.name = (TextView) itemView.findViewById(R.id.card_view_grid_item_name);
             this.picture = (ImageView) itemView.findViewById(R.id.card_view_grid_pic);
             this.amount = (TextView) itemView.findViewById(R.id.card_view_grid_amount);
+            this.price = (TextView) itemView.findViewById(R.id.card_view_grid_price);
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -48,9 +54,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public IngredientAdapter() {
+
+        CURRENT_STATE = BASE_STATE;
         mIngredients = MainActivity.getManager().getAllIngredients();
+    }
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public IngredientAdapter(List<Float> amounts) {
+
+        CURRENT_STATE = CUSTOM_STATE;
+
+        mIngredients = MainActivity.getManager().getAllIngredients();
+
     }
 
     public void notifyDataChanged() {
@@ -69,7 +85,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     public void onBindViewHolder(@NonNull IngredientAdapter.IngredientAdapterViewHolder viewHolder, int i) {
         viewHolder.name.setText(mIngredients.get(i).getName());
         //TODO load pic (picasso?)
-        viewHolder.amount.setText(String.format("%s ml", mIngredients.get(i).getPrice().first.toString()));
+        switch (CURRENT_STATE) {
+
+            case BASE_STATE:
+                viewHolder.amount.setText(String.format("%s ml", mIngredients.get(i).getPrice().first.toString()));
+                viewHolder.price.setText(String.format("%s €", mIngredients.get(i).getPrice().second.toString()));
+                break;
+
+            case CUSTOM_STATE:
+                viewHolder.amount.setText(String.format("%s ml", mIngredients.get(i).getPrice().first.toString()));
+                viewHolder.price.setText(String.format("%s €", mIngredients.get(i).getPrice().second.toString()));
+                break;
+
+        }
     }
 
     public String getId(int position) {

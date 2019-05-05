@@ -11,18 +11,18 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import wizardofba.rezeptverwaltung.MainActivity;
-import wizardofba.rezeptverwaltung.Utility.RecepiHashMapConverter;
+import wizardofba.rezeptverwaltung.Utility.RecipeHashMapConverter;
 
 @Entity
-public class Recepi {
+public class Recipe {
 
     @NonNull
     @PrimaryKey
-    private String recepiID = UUID.randomUUID().toString();
+    private String recipeID = UUID.randomUUID().toString();
 
-    @TypeConverters(RecepiHashMapConverter.class)
+    @TypeConverters(RecipeHashMapConverter.class)
     private HashMap<String, Float> ingredients;
-    @TypeConverters(RecepiHashMapConverter.class)
+    @TypeConverters(RecipeHashMapConverter.class)
     private HashMap<String, Float> recipes;
 
     private String name;
@@ -30,19 +30,19 @@ public class Recepi {
     private Float price;
     private String description;
 
-    public Recepi() {
+    public Recipe() {
         initClass();
     }
 
     @Ignore
-    public Recepi(String name) {
+    public Recipe(String name) {
         initClass();
 
         this.name = name;
     }
 
     @Ignore
-    public Recepi(String name, Float price) {
+    public Recipe(String name, Float price) {
         initClass();
 
         this.name = name;
@@ -79,7 +79,7 @@ public class Recepi {
 
     public void generatePrice() {
         float tempPrice = 0f;
-        Recepi tempRecepi;
+        Recipe tempRecipe;
         Ingredient tempIngredient;
         int index = 0;
 
@@ -88,9 +88,9 @@ public class Recepi {
         Float tempAmount;
         for(String id: recipes.keySet()) {
             tempAmount = tempRecepis.get(index);
-            tempRecepi = MainActivity.getManager().getRecepiPerUUID(id);
-            if(tempRecepi != null) {
-                tempPrice += tempRecepi.getPrice()*tempAmount;
+            tempRecipe = MainActivity.getManager().getRecepiPerUUID(id);
+            if(tempRecipe != null) {
+                tempPrice += tempRecipe.getPrice()*tempAmount;
             }
             index++;
         }
@@ -117,8 +117,8 @@ public class Recepi {
         this.picUri = picUri;
     }
 
-    public String getRecepiID() {
-        return recepiID;
+    public String getRecipeID() {
+        return recipeID;
     }
 
     public String getName() {
@@ -145,8 +145,8 @@ public class Recepi {
         this.description = description;
     }
 
-    public void setRecepiID(@NonNull String recepiID) {
-        this.recepiID = recepiID;
+    public void setRecipeID(@NonNull String recipeID) {
+        this.recipeID = recipeID;
     }
 
     public HashMap<String, Float> getIngredients() {

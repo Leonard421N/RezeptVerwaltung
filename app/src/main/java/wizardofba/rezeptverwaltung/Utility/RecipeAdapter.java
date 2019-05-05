@@ -12,12 +12,12 @@ import android.widget.TextView;
 import java.util.List;
 
 import wizardofba.rezeptverwaltung.MainActivity;
-import wizardofba.rezeptverwaltung.Models.Recepi;
+import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.R;
 
-public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdapterViewHolder> {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdapterViewHolder> {
 
-    private static List<Recepi> mRecepis;
+    private static List<Recipe> mRecipes;
 
     public static class RecepiAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -40,7 +40,7 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
                     /**
                      * JUST FOR TESTING
                      * */
-                    //MainActivity.getManager().removeRecepi(mRecepis.get(getPosition()));
+                    //MainActivity.getManager().removeRecepi(mRecipes.get(getPosition()));
                     //MainActivity.notifyUpdate();
 
                 }
@@ -49,18 +49,18 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecepiAdapter() {
-        mRecepis = MainActivity.getManager().getAllRecepis();
+    public RecipeAdapter() {
+        mRecipes = MainActivity.getManager().getAllRecipes();
     }
 
     public void notifyDataChanged() {
-        mRecepis = MainActivity.getManager().getAllRecepis();
+        mRecipes = MainActivity.getManager().getAllRecipes();
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public RecepiAdapter.RecepiAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecipeAdapter.RecepiAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_cardview, viewGroup, false);
         return new RecepiAdapterViewHolder(v);
     }
@@ -68,18 +68,18 @@ public class RecepiAdapter extends RecyclerView.Adapter<RecepiAdapter.RecepiAdap
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecepiAdapter.RecepiAdapterViewHolder viewHolder, int i) {
-        viewHolder.name.setText(mRecepis.get(i).getName());
+    public void onBindViewHolder(@NonNull RecipeAdapter.RecepiAdapterViewHolder viewHolder, int i) {
+        viewHolder.name.setText(mRecipes.get(i).getName());
         //TODO load pic (picasso?)
-        viewHolder.pricetag.setText(String.format("%s€", mRecepis.get(i).getPrice().toString()));
+        viewHolder.pricetag.setText(String.format("%s€", mRecipes.get(i).getPrice().toString()));
     }
 
     public String getId(int position) {
-        return mRecepis.get(position).getRecepiID();
+        return mRecipes.get(position).getRecipeID();
     }
 
     @Override
     public int getItemCount() {
-        return mRecepis.size();
+        return mRecipes.size();
     }
 }
