@@ -12,7 +12,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
@@ -21,8 +23,8 @@ public class AddItemActivity extends AppCompatActivity {
 
     private final int COLUMN_COUNT = 3;
     private int CURRENT_STATE = 0;
-    private final int NEW_STATE = 0;
-    private final int UPDATE_STATE = 1;
+    public static final int NEW_STATE = 0;
+    public static final int UPDATE_STATE = 1;
 
     EditText name;
     FloatingActionButton saveButton;
@@ -35,6 +37,7 @@ public class AddItemActivity extends AppCompatActivity {
     private HashMap<String, Float> ingredients;
     private HashMap<String, Float> recipes;
     private byte[] image;
+    private List<Float> amounts = new ArrayList<>();
     private String description;
 
     @Override
@@ -45,7 +48,7 @@ public class AddItemActivity extends AppCompatActivity {
         saveButton = (FloatingActionButton) findViewById(R.id.add_item_button_save);
         name = (EditText) findViewById(R.id.add_item_name);
 
-        ingredientAdapter = new IngredientAdapter();
+        ingredientAdapter = new IngredientAdapter(IngredientAdapter.CUSTOM_STATE);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_add_item);
         layoutManager = new GridLayoutManager(this, COLUMN_COUNT);
         recyclerView.setLayoutManager(layoutManager);

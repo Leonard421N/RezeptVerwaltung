@@ -1,5 +1,6 @@
 package wizardofba.rezeptverwaltung.Utility;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import wizardofba.rezeptverwaltung.AddAndEditIngredient;
 import wizardofba.rezeptverwaltung.MainActivity;
 import wizardofba.rezeptverwaltung.Models.Ingredient;
 import wizardofba.rezeptverwaltung.R;
@@ -18,10 +20,10 @@ import wizardofba.rezeptverwaltung.R;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder> {
 
     private static List<Ingredient> mIngredients;
-    private static List<Float> amounts;
-    private int CURRENT_STATE = 0;
-    private final int BASE_STATE = 0;
-    private final int CUSTOM_STATE = 1;
+    private List<Float> amounts;
+    private static int CURRENT_STATE = 0;
+    public static final int BASE_STATE = 0;
+    public static final int CUSTOM_STATE = 1;
 
     public static class IngredientAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -43,30 +45,24 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /**
-                     * JUST FOR TESTING
-                     * */
-                    //MainActivity.getManager().removeRecepi(mRecepis.get(getPosition()));
-                    //MainActivity.notifyUpdate();
-
+                    if(CURRENT_STATE == BASE_STATE) {
+                        Intent intent = new Intent(v.getContext(), AddAndEditIngredient.class);
+                        intent.putExtra("id", mIngredients.get(getPosition()).getIngredientID());
+                        v.getContext().startActivity(intent);
+                    }
                 }
             });
         }
     }
 
-    public IngredientAdapter() {
+    public IngredientAdapter(int STATE_FLAG) {
 
-        CURRENT_STATE = BASE_STATE;
+        if(STATE_FLAG == BASE_STATE) {
+            CURRENT_STATE = BASE_STATE;
+        } else if (STATE_FLAG == CUSTOM_STATE) {
+            CURRENT_STATE = CUSTOM_STATE;
+        }
         mIngredients = MainActivity.getManager().getAllIngredients();
-    }
-
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public IngredientAdapter(List<Float> amounts) {
-
-        CURRENT_STATE = CUSTOM_STATE;
-
-        mIngredients = MainActivity.getManager().getAllIngredients();
-
     }
 
     public void notifyDataChanged() {
@@ -88,12 +84,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         switch (CURRENT_STATE) {
 
             case BASE_STATE:
-                viewHolder.amount.setText(String.format("%s ml", mIngredients.get(i).getPrice().first.toString()));
+                viewHolder.amount.setText(String.format("%s " + mIngredients.get(i).getUnit(), mIngredients.get(i).getPrice().first.toString()));
                 viewHolder.price.setText(String.format("%s €", mIngredients.get(i).getPrice().second.toString()));
                 break;
 
             case CUSTOM_STATE:
-                viewHolder.amount.setText(String.format("%s ml", mIngredients.get(i).getPrice().first.toString()));
+                viewHolder.amount.setText(String.format("%s " + mIngredients.get(i).getUnit(), mIngredients.get(i).getPrice().first.toString()));
                 viewHolder.price.setText(String.format("%s €", mIngredients.get(i).getPrice().second.toString()));
                 break;
 

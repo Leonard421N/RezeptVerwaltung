@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import wizardofba.rezeptverwaltung.Manage.Manager;
-import wizardofba.rezeptverwaltung.Models.Ingredient;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
 import wizardofba.rezeptverwaltung.Utility.RecipeAdapter;
 
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         manager = Manager.getInstance(this);
 
         recipeAdapter = new RecipeAdapter();
-        ingredientAdapter = new IngredientAdapter();
+        ingredientAdapter = new IngredientAdapter(IngredientAdapter.BASE_STATE);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -86,11 +85,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(resultCode == RESULT_FIRST_USER){
-            //manager.addRecepi(new Recipe(data.getStringExtra("name")));
+            //manager.addRecepi(new Recipe(data.getStringExtra("nameEditText")));
         } else if(resultCode == 5) {
-            manager.addIngredient(new Ingredient(data.getStringExtra("name"),
-                    data.getFloatExtra("amount", 0f),
-                    data.getFloatExtra("price", 0f)));
+
         }
         notifyUpdate();
     }

@@ -60,14 +60,17 @@ public class Recipe {
 
     public void addIngredient(String ingr, Float amount) {
         this.ingredients.put(ingr, amount);
+        generatePrice();
     }
 
     public void addRecipe(String id) {
         this.recipes.put(id, 1.0f);
+        generatePrice();
     }
 
     public void addRecipe(String id, Float amount) {
         this.recipes.put(id, amount);
+        generatePrice();
     }
 
     public void removeIngredient(String id) {
@@ -78,6 +81,7 @@ public class Recipe {
                 }
             }
         }
+        generatePrice();
     }
 
     public void generatePrice() {

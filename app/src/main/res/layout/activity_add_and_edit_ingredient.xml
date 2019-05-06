@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:text="Add Recepi"
+            android:text="Name of Ingredient"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:textColor="@color/colorCardViewText"

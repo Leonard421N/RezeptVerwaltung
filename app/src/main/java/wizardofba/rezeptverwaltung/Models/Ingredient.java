@@ -27,6 +27,7 @@ public class Ingredient {
 
     private String name;
     private String description;
+    private String unit;
 
     public Ingredient() {
     }
@@ -34,12 +35,14 @@ public class Ingredient {
     @Ignore
     public Ingredient(String name) {
         this.name = name;
+        this.unit = "ml";
     }
 
     @Ignore
     public Ingredient(String name, float amount, float price) {
         this.name = name;
         this.price = new Pair<>(amount, price);
+        this.unit = "ml";
     }
 
 
@@ -80,6 +83,14 @@ public class Ingredient {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public byte[] getImage() {
