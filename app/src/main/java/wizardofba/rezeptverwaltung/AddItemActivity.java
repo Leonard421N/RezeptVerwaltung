@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +74,11 @@ public class AddItemActivity extends AppCompatActivity {
             CURRENT_STATE = UPDATE_STATE;
             mRecipe = MainActivity.getManager().getRecepiPerUUID(id);
             name.setText(mRecipe != null ? mRecipe.getName() : "");
+            image = mRecipe.getImage();
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(image);
+            Bitmap bitmap = BitmapFactory.decodeStream(arrayInputStream);
+            imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             CURRENT_STATE = NEW_STATE;
             mRecipe = new Recipe();
@@ -128,7 +136,7 @@ public class AddItemActivity extends AppCompatActivity {
                     if(ingredients != null && ingredients.size() != 0) {
                         mRecipe.setIngredients(ingredients);
                     }
-                    if(image != null && image != null) {
+                    if(image != null) {
                         mRecipe.setImage(image);
                     }
                     if(description != null && !description.equals("")) {
@@ -182,8 +190,17 @@ public class AddItemActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
         {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            if (photo != null) {
+                imageView.setImageBitmap(photo);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                //int width = photo.getWidth();
+                //int  height = photo.getHeight();
+                int size = photo.getRowBytes() * photo.getHeight();
+                ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+                photo.copyPixelsToBuffer(byteBuffer);
+                this.image = byteBuffer.array();
+            }
         }
     }
 
