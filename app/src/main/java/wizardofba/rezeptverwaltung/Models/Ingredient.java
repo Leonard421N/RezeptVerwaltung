@@ -1,6 +1,5 @@
 package wizardofba.rezeptverwaltung.Models;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -22,8 +21,7 @@ public class Ingredient {
     @TypeConverters(IngredientPriceConverter.class)
     private Pair<Float, Float> price;
 
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    private byte[] image;
+    private String imageUri;
 
     private String name;
     private String description;
@@ -93,11 +91,11 @@ public class Ingredient {
         this.unit = unit;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getImageUri() {
+        return imageUri;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }

@@ -1,15 +1,17 @@
 package wizardofba.rezeptverwaltung;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +21,16 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
-import java.nio.ByteBuffer;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
@@ -35,8 +41,9 @@ public class AddItemActivity extends AppCompatActivity {
     private int CURRENT_STATE = 0;
     public static final int NEW_STATE = 0;
     public static final int UPDATE_STATE = 1;
-    private static final int CAMERA_REQUEST = 1888;
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int WRITE_EXTERNAL_STORAGE_CODE = 2;
 
     EditText name;
     FloatingActionButton saveButton;
@@ -49,9 +56,12 @@ public class AddItemActivity extends AppCompatActivity {
 
     private HashMap<String, Float> ingredients;
     private HashMap<String, Float> recipes;
-    private byte[] image;
+    private String image;
+    String currentPhotoPath;
     private List<Float> amounts = new ArrayList<>();
     private String description;
+
+    File tempFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +84,12 @@ public class AddItemActivity extends AppCompatActivity {
             CURRENT_STATE = UPDATE_STATE;
             mRecipe = MainActivity.getManager().getRecepiPerUUID(id);
             name.setText(mRecipe != null ? mRecipe.getName() : "");
-            image = mRecipe.getImage();
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(image);
-            Bitmap bitmap = BitmapFactory.decodeStream(arrayInputStream);
-            imageView.setImageBitmap(bitmap);
+            image = mRecipe.getImageUri();
+            try {
+                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.fromFile(new File(image))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             CURRENT_STATE = NEW_STATE;
@@ -101,23 +113,17 @@ public class AddItemActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //open camera or gallery
-                if (ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddItemActivity.this,
-                            Manifest.permission.CAMERA)) {
-                        // Show an explanation to the user *asynchronously* -- don't block
-                        // this thread waiting for the user's response! After the user
-                        // sees the explanation, try again to request the permission.
+
+                int result1 = ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                int result2 = ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.CAMERA);
+                if (result1 != PackageManager.PERMISSION_GRANTED || result2 == PackageManager.PERMISSION_GRANTED){
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        Toast.makeText(AddItemActivity.this.getApplicationContext(), "External Storage and Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
                     } else {
-                        // No explanation needed; request the permission
-                        ActivityCompat.requestPermissions(AddItemActivity.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                MY_CAMERA_PERMISSION_CODE);
+                        ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, WRITE_EXTERNAL_STORAGE_CODE);
                     }
-                }
-                else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                } else {
+                    dispatchTakePictureIntent();
                 }
             }
         });
@@ -137,7 +143,7 @@ public class AddItemActivity extends AppCompatActivity {
                         mRecipe.setIngredients(ingredients);
                     }
                     if(image != null) {
-                        mRecipe.setImage(image);
+                        mRecipe.setImageUri(image);
                     }
                     if(description != null && !description.equals("")) {
                         mRecipe.setDescription(description);
@@ -169,37 +175,73 @@ public class AddItemActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    dispatchTakePictureIntent();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
+                return;
+            }
+            case WRITE_EXTERNAL_STORAGE_CODE: {
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    dispatchTakePictureIntent();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
                 }
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
-        {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            if (photo != null) {
-                imageView.setImageBitmap(photo);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) Objects.requireNonNull(extras).get("data");
+            imageView.setImageBitmap(imageBitmap);
+            this.image = currentPhotoPath;
+        }
+    }
 
-                //int width = photo.getWidth();
-                //int  height = photo.getHeight();
-                int size = photo.getRowBytes() * photo.getHeight();
-                ByteBuffer byteBuffer = ByteBuffer.allocate(size);
-                photo.copyPixelsToBuffer(byteBuffer);
-                this.image = byteBuffer.array();
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",   /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }

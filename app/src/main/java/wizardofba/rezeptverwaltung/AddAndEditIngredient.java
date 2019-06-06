@@ -24,7 +24,7 @@ public class AddAndEditIngredient extends AppCompatActivity {
 
 
     private Pair<Float, Float> price;
-    private byte[] image;
+    private String image;
     private String description;
 
     EditText nameEditText;
@@ -113,7 +113,7 @@ public class AddAndEditIngredient extends AppCompatActivity {
                     mIngredient.setUnit(spinner.toString());
 
                     if(image != null && image != null) {
-                        mIngredient.setImage(image);
+                        mIngredient.setImageUri(image);
                     }
 
                     if(description != null && !description.equals("")) {
