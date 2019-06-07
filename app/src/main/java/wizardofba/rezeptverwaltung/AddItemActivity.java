@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
@@ -61,8 +61,6 @@ public class AddItemActivity extends AppCompatActivity {
     private List<Float> amounts = new ArrayList<>();
     private String description;
 
-    File tempFile;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +83,11 @@ public class AddItemActivity extends AppCompatActivity {
             mRecipe = MainActivity.getManager().getRecepiPerUUID(id);
             name.setText(mRecipe != null ? mRecipe.getName() : "");
             image = mRecipe.getImageUri();
+            Uri imageUri = Uri.parse(image);
             try {
-                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.fromFile(new File(image))));
+                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri));
             } catch (IOException e) {
-                e.printStackTrace();
+                //NO IMAGE SAVED -> OKAY
             }
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
@@ -116,7 +115,7 @@ public class AddItemActivity extends AppCompatActivity {
 
                 int result1 = ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 int result2 = ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.CAMERA);
-                if (result1 != PackageManager.PERMISSION_GRANTED || result2 == PackageManager.PERMISSION_GRANTED){
+                if (result1 != PackageManager.PERMISSION_GRANTED || result2 != PackageManager.PERMISSION_GRANTED){
                     if (ActivityCompat.shouldShowRequestPermissionRationale(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
                         Toast.makeText(AddItemActivity.this.getApplicationContext(), "External Storage and Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
                     } else {
@@ -168,29 +167,25 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         switch (requestCode) {
             case MY_CAMERA_PERMISSION_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission granted -> start photo intent
                     dispatchTakePictureIntent();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied
                 }
                 return;
             }
             case WRITE_EXTERNAL_STORAGE_CODE: {
-
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission granted -> start photo intent
                     dispatchTakePictureIntent();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied
                 }
                 return;
             }
@@ -200,12 +195,36 @@ public class AddItemActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        Uri imageUri = Uri.parse(currentPhotoPath);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) Objects.requireNonNull(extras).get("data");
-            imageView.setImageBitmap(imageBitmap);
-            this.image = currentPhotoPath;
+
+            Bitmap bitmap;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                imageView.setImageBitmap(bitmap);
+                this.image = currentPhotoPath;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            //Delete Image File when taking photo ist canceled
+            File image = new File(imageUri.getPath());
+            image.delete();
+            if(image.exists()){
+                try {
+                    image.getCanonicalFile().delete();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(image.exists()){
+                    getApplicationContext().deleteFile(image.getName());
+                }
+            }
         }
+
     }
 
     private File createImageFile() throws IOException {
@@ -220,7 +239,7 @@ public class AddItemActivity extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        currentPhotoPath = Uri.fromFile(image).toString();
         return image;
     }
 

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         addFab = (FloatingActionButton) findViewById(R.id.fab_add);
 
         addFab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Intent intent;

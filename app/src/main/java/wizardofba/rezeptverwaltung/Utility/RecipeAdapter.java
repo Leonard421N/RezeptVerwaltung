@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung.Utility;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -68,9 +69,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
 
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.RecepiAdapterViewHolder viewHolder, int i) {
-        viewHolder.name.setText(mRecipes.get(i).getName());
+        Recipe tempRecipe = mRecipes.get(i);
+        viewHolder.name.setText(tempRecipe.getName());
         //TODO load pic (picasso?)
-        viewHolder.pricetag.setText(String.format("%s€", mRecipes.get(i).getPrice().toString()));
+        viewHolder.pricetag.setText(String.format("%s€", tempRecipe.getPrice().toString()));
+        viewHolder.picture.setImageBitmap(MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(tempRecipe.getImageUri())));
     }
 
     public String getId(int position) {

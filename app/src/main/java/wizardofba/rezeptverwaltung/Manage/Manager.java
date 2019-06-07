@@ -19,11 +19,13 @@ public class Manager {
     private RecipeDatabase recipeDatabase;
     private List<Recipe> allRecipes;
     private List<Ingredient> allIngredients;
+    private Context mainactivity;
 
     private Manager(Context context) {
 
         allRecipes = new ArrayList<>();
         allIngredients = new ArrayList<>();
+        mainactivity = context;
 
         recipeDatabase = Room.databaseBuilder(context,
                 RecipeDatabase.class, DATABASE_NAME)
@@ -67,6 +69,10 @@ public class Manager {
             e.printStackTrace();
         }
         MainActivity.notifyUpdate();
+    }
+
+    public Context getMainactivityContext() {
+        return mainactivity;
     }
 
     public void updateRecipe(final Recipe recipe) {
