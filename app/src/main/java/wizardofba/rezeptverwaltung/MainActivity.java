@@ -107,9 +107,11 @@ public class MainActivity extends AppCompatActivity {
                     CURRENT_STATE = STATE_INGREDIENTS;
                     fillRecyclerView();
                     return true;
+                    /*
                 case R.id.settings:
                     CURRENT_STATE = STATE_SETTINGS;
                     return true;
+                    */
             }
             return false;
         }
