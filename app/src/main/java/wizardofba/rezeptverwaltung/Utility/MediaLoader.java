@@ -1,13 +1,11 @@
 package wizardofba.rezeptverwaltung.Utility;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
-import java.io.IOException;
-
-import wizardofba.rezeptverwaltung.MainActivity;
+import java.io.ByteArrayOutputStream;
 
 public class MediaLoader {
 
@@ -23,13 +21,17 @@ public class MediaLoader {
         return MediaLoader.instance;
     }
 
+    //MainActivity.getManager().getMainactivityContext().getContentResolver()
+
     @Nullable
     public Bitmap loadBitmapFromUri(Uri uri) {
-        try {
-            return MediaStore.Images.Media.getBitmap(MainActivity.getManager().getMainactivityContext().getContentResolver(), uri);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 25;
+        Bitmap bmpSample = BitmapFactory.decodeFile(uri.getPath(), options);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bmpSample.compress(Bitmap.CompressFormat.JPEG, 1, out);
+
+        return bmpSample;
     }
 }
