@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import wizardofba.rezeptverwaltung.AddAndEditIngredient;
+import wizardofba.rezeptverwaltung.AddAndEditIngredientActivity;
 import wizardofba.rezeptverwaltung.MainActivity;
 import wizardofba.rezeptverwaltung.Models.Ingredient;
 import wizardofba.rezeptverwaltung.R;
@@ -46,9 +46,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                 @Override
                 public void onClick(View v) {
                     if(CURRENT_STATE == BASE_STATE) {
-                        Intent intent = new Intent(v.getContext(), AddAndEditIngredient.class);
+                        Intent intent = new Intent(v.getContext(), AddAndEditIngredientActivity.class);
                         intent.putExtra("id", mIngredients.get(getPosition()).getIngredientID());
                         v.getContext().startActivity(intent);
+                    } else if (CURRENT_STATE == CUSTOM_STATE) {
+
                     }
                 }
             });
@@ -79,18 +81,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
     @Override
     public void onBindViewHolder(@NonNull IngredientAdapter.IngredientAdapterViewHolder viewHolder, int i) {
-        viewHolder.name.setText(mIngredients.get(i).getName());
+        Ingredient tempIngredient = mIngredients.get(i);
+        viewHolder.name.setText(tempIngredient.getName());
         //TODO load pic (picasso?)
         switch (CURRENT_STATE) {
 
             case BASE_STATE:
-                viewHolder.amount.setText(String.format("%s " + mIngredients.get(i).getUnit(), mIngredients.get(i).getPrice().first.toString()));
-                viewHolder.price.setText(String.format("%s €", mIngredients.get(i).getPrice().second.toString()));
+                viewHolder.amount.setText(String.format("%s " + tempIngredient.getUnit(), tempIngredient.getPrice().first.toString()));
+                viewHolder.price.setText(String.format("%s €", tempIngredient.getPrice().second.toString()));
                 break;
 
             case CUSTOM_STATE:
-                viewHolder.amount.setText(String.format("%s " + mIngredients.get(i).getUnit(), mIngredients.get(i).getPrice().first.toString()));
-                viewHolder.price.setText(String.format("%s €", mIngredients.get(i).getPrice().second.toString()));
+                viewHolder.amount.setText(String.format("%s " + tempIngredient.getUnit(), tempIngredient.getPrice().first.toString()));
+                viewHolder.price.setText(String.format("%s €", tempIngredient.getPrice().second.toString()));
                 break;
 
         }

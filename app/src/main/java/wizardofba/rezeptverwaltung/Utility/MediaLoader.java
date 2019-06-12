@@ -21,12 +21,10 @@ public class MediaLoader {
         return MediaLoader.instance;
     }
 
-    //MainActivity.getManager().getMainactivityContext().getContentResolver()
-
     @Nullable
     public Bitmap loadBitmapFromUri(Uri uri) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 25;
+        options.inSampleSize = 20;
         Bitmap bmpSample = BitmapFactory.decodeFile(uri.getPath(), options);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

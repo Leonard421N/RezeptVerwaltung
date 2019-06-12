@@ -60,17 +60,12 @@ public class MainActivity extends AppCompatActivity {
                 switch(CURRENT_STATE) {
 
                     case STATE_RECEPIS:
-                        /*
-                        getManager().addRecepi(new Recipe("Kekse", 2.1f));
-                        notifyUpdate();
-                        recyclerView.scrollToPosition(recipeAdapter.getItemCount());
-                        */
-                        intent = new Intent(MainActivity.this, AddItemActivity.class);
+                        intent = new Intent(MainActivity.this, AddAndEditRecipeActivity.class);
                         startActivityForResult(intent, RESULT_FIRST_USER);
                         break;
 
                     case STATE_INGREDIENTS:
-                        intent = new Intent(MainActivity.this, AddAndEditIngredient.class);
+                        intent = new Intent(MainActivity.this, AddAndEditIngredientActivity.class);
                         startActivityForResult(intent, 5);
                         break;
 
@@ -127,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             case STATE_INGREDIENTS:
                 ingredientAdapter.notifyDataChanged();
                 break;
-    }
+        }
     }
 
     public static Manager getManager() {

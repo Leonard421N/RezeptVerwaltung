@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,10 +14,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -35,7 +39,7 @@ import java.util.List;
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     private final int COLUMN_COUNT = 3;
     private int CURRENT_STATE = 0;
@@ -83,13 +87,15 @@ public class AddItemActivity extends AppCompatActivity {
             mRecipe = MainActivity.getManager().getRecepiPerUUID(id);
             name.setText(mRecipe != null ? mRecipe.getName() : "");
             image = mRecipe.getImageUri();
-            Uri imageUri = Uri.parse(image);
-            try {
-                imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri));
-            } catch (IOException e) {
-                //NO IMAGE SAVED -> OKAY
+            if(image != null) {
+                Uri imageUri = Uri.parse(image);
+                try {
+                    imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri));
+                } catch (IOException e) {
+                    //NO IMAGE SAVED -> OKAY
+                }
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             CURRENT_STATE = NEW_STATE;
             mRecipe = new Recipe();
@@ -113,13 +119,13 @@ public class AddItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                int result1 = ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                int result2 = ContextCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.CAMERA);
+                int result1 = ContextCompat.checkSelfPermission(AddAndEditRecipeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                int result2 = ContextCompat.checkSelfPermission(AddAndEditRecipeActivity.this, Manifest.permission.CAMERA);
                 if (result1 != PackageManager.PERMISSION_GRANTED || result2 != PackageManager.PERMISSION_GRANTED){
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-                        Toast.makeText(AddItemActivity.this.getApplicationContext(), "External Storage and Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddAndEditRecipeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        Toast.makeText(AddAndEditRecipeActivity.this.getApplicationContext(), "External Storage and Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
                     } else {
-                        ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, WRITE_EXTERNAL_STORAGE_CODE);
+                        ActivityCompat.requestPermissions(AddAndEditRecipeActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, WRITE_EXTERNAL_STORAGE_CODE);
                     }
                 } else {
                     dispatchTakePictureIntent();
@@ -165,6 +171,41 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.delete_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.delete_button) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Willst du das Rezept wirklich löschen?").setPositiveButton("Ja", dialogClickListener)
+                    .setNegativeButton("Nein", dialogClickListener).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    MainActivity.getManager().removeRecepi(mRecipe);
+                    finish();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

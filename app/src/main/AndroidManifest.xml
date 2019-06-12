@@ -14,9 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".AddAndEditIngredient"/>
+        <activity android:name=".AddAndEditIngredientActivity"/>
         <activity
-            android:name=".AddItemActivity"
+            android:name=".AddAndEditRecipeActivity"
             android:windowSoftInputMode="adjustNothing|stateUnchanged" />
         <activity
             android:name=".MainActivity"

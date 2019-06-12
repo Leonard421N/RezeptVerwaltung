@@ -2,7 +2,6 @@ package wizardofba.rezeptverwaltung.Utility;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import wizardofba.rezeptverwaltung.AddItemActivity;
+import wizardofba.rezeptverwaltung.AddAndEditRecipeActivity;
 import wizardofba.rezeptverwaltung.MainActivity;
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.R;
@@ -22,6 +21,7 @@ import wizardofba.rezeptverwaltung.R;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdapterViewHolder> {
 
     private static List<Recipe> mRecipes;
+    private static List<Bitmap> mRecipeImgs;
 
     public static class RecepiAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,7 +41,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), AddItemActivity.class);
+                    Intent intent = new Intent(v.getContext(), AddAndEditRecipeActivity.class);
                     intent.putExtra("id", mRecipes.get(getPosition()).getRecipeID());
                     v.getContext().startActivity(intent);
                 }
@@ -51,10 +51,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public RecipeAdapter() {
+        mRecipeImgs = MainActivity.getManager().getAllRecipeImgs();
         mRecipes = MainActivity.getManager().getAllRecipes();
     }
 
     public void notifyDataChanged() {
+        mRecipeImgs = MainActivity.getManager().getAllRecipeImgs();
         mRecipes = MainActivity.getManager().getAllRecipes();
         notifyDataSetChanged();
     }
@@ -72,11 +74,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
     public void onBindViewHolder(@NonNull RecipeAdapter.RecepiAdapterViewHolder viewHolder, int i) {
         Recipe tempRecipe = mRecipes.get(i);
         viewHolder.name.setText(tempRecipe.getName());
-        //TODO load pic (picasso?)
         viewHolder.pricetag.setText(String.format("%s€", tempRecipe.getPrice().toString()));
-        if(tempRecipe.getImageUri() != null) {
-            Bitmap tempBitmap = MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(tempRecipe.getImageUri()));
-            viewHolder.picture.setImageBitmap(tempBitmap);
+
+        if(mRecipeImgs.size() > 0) {
+            Bitmap tempBitmap = mRecipeImgs.get(i);
+            if (tempBitmap != null) {
+                viewHolder.picture.setImageBitmap(tempBitmap);
+            }
         }
     }
 

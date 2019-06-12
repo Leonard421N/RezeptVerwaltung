@@ -1,11 +1,15 @@
 package wizardofba.rezeptverwaltung;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
@@ -15,7 +19,7 @@ import android.widget.TextView;
 
 import wizardofba.rezeptverwaltung.Models.Ingredient;
 
-public class AddAndEditIngredient extends AppCompatActivity {
+public class AddAndEditIngredientActivity extends AppCompatActivity {
 
     private int CURRENT_STATE = 0;
     private final int NEW_STATE = 0;
@@ -112,7 +116,7 @@ public class AddAndEditIngredient extends AppCompatActivity {
                     mIngredient.setPrice(new Pair<Float, Float>(amountFloat, priceFloat));
                     mIngredient.setUnit(spinner.toString());
 
-                    if(image != null && image != null) {
+                    if(image != null) {
                         mIngredient.setImageUri(image);
                     }
 
@@ -139,4 +143,39 @@ public class AddAndEditIngredient extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.delete_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.delete_button) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Willst du diese Zutat wirklich löschen?").setPositiveButton("Ja", dialogClickListener)
+                    .setNegativeButton("Nein", dialogClickListener).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    MainActivity.getManager().removeIngredient(mIngredient);
+                    finish();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
 }
