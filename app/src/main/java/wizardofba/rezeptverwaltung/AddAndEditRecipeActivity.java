@@ -86,14 +86,10 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             CURRENT_STATE = UPDATE_STATE;
             mRecipe = MainActivity.getManager().getRecepiPerUUID(id);
             name.setText(mRecipe != null ? mRecipe.getName() : "");
-            image = mRecipe.getImageUri();
-            if(image != null) {
-                Uri imageUri = Uri.parse(image);
-                try {
-                    imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri));
-                } catch (IOException e) {
-                    //NO IMAGE SAVED -> OKAY
-                }
+            int tempPosition = intent.getIntExtra("position", -1);
+            Bitmap tempBitmap = MainActivity.getManager().getAllRecipeImgs().get(tempPosition);
+            if(tempBitmap != null || tempPosition != -1) {
+                imageView.setImageBitmap(tempBitmap);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
         } else {

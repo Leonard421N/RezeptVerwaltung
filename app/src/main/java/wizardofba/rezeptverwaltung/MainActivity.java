@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        IngredientAdapter.setCurrentState(IngredientAdapter.BASE_STATE);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(resultCode == RESULT_FIRST_USER){

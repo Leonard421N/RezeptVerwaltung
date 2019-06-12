@@ -73,6 +73,9 @@ public class Manager {
             @Override
             public void run() {
                 allRecipes.add(recipe);
+                if(recipe.getImageUri() != null) {
+                    allRecipeImgs.add(MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(recipe.getImageUri())));
+                } else allRecipeImgs.add(null);
                 recipeDatabase.daoAccess().insertOnlySingleRecipe(recipe);
             }
         });
@@ -117,6 +120,9 @@ public class Manager {
             @Override
             public void run() {
                 allIngredients.add(ingredient);
+                if(ingredient.getImageUri() != null) {
+                    allIngredientImgs.add(MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(ingredient.getImageUri())));
+                } else allIngredientImgs.add(null);
                 recipeDatabase.daoAccess().insertOnlySingleIngredient(ingredient);
             }
         });
@@ -155,7 +161,9 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
+                int index = allRecipes.indexOf(recipe);
                 allRecipes.remove(recipe);
+                allRecipeImgs.remove(index);
                 recipeDatabase.daoAccess().deleteRecipe(recipe);
             }
         });
@@ -172,7 +180,9 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
+                int index = allIngredients.indexOf(ingredient);
                 allIngredients.remove(ingredient);
+                allIngredientImgs.remove(index);
                 recipeDatabase.daoAccess().deleteIngredient(ingredient);
             }
         });

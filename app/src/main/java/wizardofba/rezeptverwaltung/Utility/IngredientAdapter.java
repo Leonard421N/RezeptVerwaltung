@@ -59,11 +59,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
     public IngredientAdapter(int STATE_FLAG) {
 
-        if(STATE_FLAG == BASE_STATE) {
-            CURRENT_STATE = BASE_STATE;
-        } else if (STATE_FLAG == CUSTOM_STATE) {
-            CURRENT_STATE = CUSTOM_STATE;
-        }
+        CURRENT_STATE = STATE_FLAG;
         mIngredients = MainActivity.getManager().getAllIngredients();
     }
 
@@ -106,5 +102,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     @Override
     public int getItemCount() {
         return mIngredients.size();
+    }
+
+    public static void setCurrentState(int currentState) {
+        CURRENT_STATE = currentState;
     }
 }
