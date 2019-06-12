@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung.Utility;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,8 @@ import wizardofba.rezeptverwaltung.R;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder> {
 
     private static List<Ingredient> mIngredients;
+    private static List<Bitmap> mIngredientImgs;
+
     private List<Float> amounts;
     private static int CURRENT_STATE = 0;
     public static final int BASE_STATE = 0;
@@ -48,6 +51,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                     if(CURRENT_STATE == BASE_STATE) {
                         Intent intent = new Intent(v.getContext(), AddAndEditIngredientActivity.class);
                         intent.putExtra("id", mIngredients.get(getPosition()).getIngredientID());
+                        intent.putExtra("position", getPosition());
                         v.getContext().startActivity(intent);
                     } else if (CURRENT_STATE == CUSTOM_STATE) {
 
@@ -58,12 +62,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     }
 
     public IngredientAdapter(int STATE_FLAG) {
-
         CURRENT_STATE = STATE_FLAG;
+        mIngredientImgs = MainActivity.getManager().getAllIngredientImgs();
         mIngredients = MainActivity.getManager().getAllIngredients();
     }
 
     public void notifyDataChanged() {
+        mIngredientImgs = MainActivity.getManager().getAllIngredientImgs();
         mIngredients = MainActivity.getManager().getAllIngredients();
         notifyDataSetChanged();
     }
@@ -79,6 +84,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     public void onBindViewHolder(@NonNull IngredientAdapter.IngredientAdapterViewHolder viewHolder, int i) {
         Ingredient tempIngredient = mIngredients.get(i);
         viewHolder.name.setText(tempIngredient.getName());
+        if(mIngredientImgs.size() > 0) {
+            Bitmap tempBitmap = mIngredientImgs.get(i);
+            if (tempBitmap != null) {
+                viewHolder.picture.setImageBitmap(tempBitmap);
+            }
+        }
         //TODO load pic (picasso?)
         switch (CURRENT_STATE) {
 

@@ -97,11 +97,9 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < allRecipes.size(); i++) {
-                    if(recipe.getRecipeID().equals(allRecipes.get(i))) {
-                        allRecipes.set(i, recipe);
-                    }
-                }
+                int index = allRecipes.indexOf(recipe);
+                allRecipes.set(index, recipe);
+                allRecipeImgs.set(index, MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(recipe.getImageUri())));
                 recipeDatabase.daoAccess().updateRecipe(recipe);
             }
         });
@@ -140,11 +138,9 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < allRecipes.size(); i++) {
-                    if(ingredient.getIngredientID().equals(allRecipes.get(i))) {
-                        allIngredients.set(i, ingredient);
-                    }
-                }
+                int index = allIngredients.indexOf(ingredient);
+                allIngredients.set(index, ingredient);
+                allIngredientImgs.set(index, MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(ingredient.getImageUri())));
                 recipeDatabase.daoAccess().updateIngredient(ingredient);
             }
         });

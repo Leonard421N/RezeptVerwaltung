@@ -1,9 +1,19 @@
 package wizardofba.rezeptverwaltung;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
@@ -14,8 +24,15 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import wizardofba.rezeptverwaltung.Models.Ingredient;
 
@@ -24,6 +41,10 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
     private int CURRENT_STATE = 0;
     private final int NEW_STATE = 0;
     private final int UPDATE_STATE = 1;
+    private static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int WRITE_EXTERNAL_STORAGE_CODE = 2;
+
     Ingredient mIngredient;
 
 
@@ -37,6 +58,9 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
     FloatingActionButton saveButton;
     Spinner spinner;
     String[] tempStrArray;
+    ImageView imageView;
+
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +72,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
         priceEditText = (EditText) findViewById(R.id.add_and_edit_ingredient_price);
         amount = (EditText) findViewById(R.id.add_and_edit_ingredient_amount);
         spinner = (Spinner) findViewById(R.id.add_and_edit_ingredient_amount_unit_spinner);
+        imageView = (ImageView) findViewById(R.id.add_and_edit_ingredient_picture);
 
         tempStrArray = getResources().getStringArray(R.array.string_array_units);
 
@@ -66,6 +91,12 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
             amount.setText(mIngredient != null ? mIngredient.getPrice().first.toString() : "");
             priceEditText.setText(mIngredient != null ? mIngredient.getPrice().second.toString() : "");
 
+            int tempPosition = intent.getIntExtra("position", -1);
+            Bitmap tempBitmap = MainActivity.getManager().getAllIngredientImgs().get(tempPosition);
+            if(tempBitmap != null || tempPosition != -1) {
+                imageView.setImageBitmap(tempBitmap);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
             int i = 0;
             for(; i < tempStrArray.length; i++) {
                 if(mIngredient.getUnit().equals(tempStrArray[i])) {
@@ -116,7 +147,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                     mIngredient.setPrice(new Pair<Float, Float>(amountFloat, priceFloat));
                     mIngredient.setUnit(spinner.toString());
 
-                    if(image != null) {
+                    if(image != null || !image.equals("")) {
                         mIngredient.setImageUri(image);
                     }
 
@@ -139,6 +170,24 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                     Intent returnIntent = new Intent();
                     setResult(5, returnIntent);
                     finish();
+                }
+            }
+        });
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int result1 = ContextCompat.checkSelfPermission(AddAndEditIngredientActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                int result2 = ContextCompat.checkSelfPermission(AddAndEditIngredientActivity.this, Manifest.permission.CAMERA);
+                if (result1 != PackageManager.PERMISSION_GRANTED || result2 != PackageManager.PERMISSION_GRANTED){
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddAndEditIngredientActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        Toast.makeText(AddAndEditIngredientActivity.this.getApplicationContext(), "External Storage and Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                    } else {
+                        ActivityCompat.requestPermissions(AddAndEditIngredientActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, WRITE_EXTERNAL_STORAGE_CODE);
+                    }
+                } else {
+                    dispatchTakePictureIntent();
                 }
             }
         });
@@ -178,4 +227,103 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case MY_CAMERA_PERMISSION_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted -> start photo intent
+                    dispatchTakePictureIntent();
+                } else {
+                    // permission denied
+                }
+                return;
+            }
+            case WRITE_EXTERNAL_STORAGE_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted -> start photo intent
+                    dispatchTakePictureIntent();
+                } else {
+                    // permission denied
+                }
+                return;
+            }
+
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        Uri imageUri = Uri.parse(currentPhotoPath);
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+            Bitmap bitmap;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                imageView.setImageBitmap(bitmap);
+                this.image = currentPhotoPath;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            //Delete Image File when taking photo ist canceled
+            File image = new File(imageUri.getPath());
+            image.delete();
+            if(image.exists()){
+                try {
+                    image.getCanonicalFile().delete();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(image.exists()){
+                    getApplicationContext().deleteFile(image.getName());
+                }
+            }
+        }
+
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",   /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = Uri.fromFile(image).toString();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
 }
