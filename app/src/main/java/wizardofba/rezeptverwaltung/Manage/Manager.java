@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import wizardofba.rezeptverwaltung.MainActivity;
@@ -24,7 +26,7 @@ public class Manager {
     private List<Ingredient> allIngredients;
     private List<Bitmap> allRecipeImgs;
     private List<Bitmap> allIngredientImgs;
-    private Context mainactivity;
+    private Context mainActivity;
 
     private Manager(Context context) {
 
@@ -32,7 +34,7 @@ public class Manager {
         allIngredients = new ArrayList<>();
         allRecipeImgs = new ArrayList<>();
         allIngredientImgs = new ArrayList<>();
-        mainactivity = context;
+        mainActivity = context;
 
         recipeDatabase = Room.databaseBuilder(context,
                 RecipeDatabase.class, DATABASE_NAME)
@@ -89,7 +91,7 @@ public class Manager {
     }
 
     public Context getMainactivityContext() {
-        return mainactivity;
+        return mainActivity;
     }
 
     public void updateRecipe(final Recipe recipe) {
@@ -237,6 +239,33 @@ public class Manager {
         }
     }
 
+    public ArrayList<Bitmap> loadAllCustomIngredientBitmaps(final HashMap<Ingredient, Float> customIngredients) {
+
+        final ArrayList<Bitmap> result = new ArrayList<>();
+
+        Thread current = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (Ingredient tempIngredient: customIngredients.keySet()) {
+                    try {
+                        result.add(MediaLoader.getInstance()
+                                .loadBitmapFromUri(Uri.parse(tempIngredient.getImageUri())));
+                    } catch (Exception e) {
+                        result.add(null);
+                    }
+                }
+            }
+        });
+        current.start();
+        try {
+            current.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
         public List<Bitmap> getAllRecipeImgs() {
             return allRecipeImgs;
         }
@@ -271,6 +300,19 @@ public class Manager {
                 }
             }
             return null;
+        }
+
+        public LinkedHashMap<Ingredient, Float> createCustomIngredientHashMap(HashMap<String, Float> customIngredients) {
+            LinkedHashMap<Ingredient, Float> result = new LinkedHashMap<>();
+            if(customIngredients != null) {
+                List<String> ingredientIDs = new ArrayList<>(customIngredients.keySet());
+                ArrayList<Float> amounts = new ArrayList<>(customIngredients.values());
+                for (int i = 0; i < ingredientIDs.size(); i++) {
+                    Ingredient tempIngredient = getIngredientPerUUID(ingredientIDs.get(i));
+                    result.put(tempIngredient, amounts.get(i));
+                }
+            }
+            return result;
         }
 
 }

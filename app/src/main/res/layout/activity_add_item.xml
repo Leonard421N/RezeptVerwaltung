@@ -76,6 +76,15 @@
             android:textColor="@color/colorCardViewText"
             android:textSize="18sp"/>
 
+        <Button
+            android:id="@+id/add_item_button_add_ingredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:text="Zutat hinzufügen"
+            app:layout_constraintEnd_toEndOf="@+id/add_item_title_and_pic"
+            app:layout_constraintTop_toBottomOf="@+id/add_item_title_and_pic" />
+
         <!--Button
             android:id="@+id/add_item_ingredients_button"
             android:layout_width="wrap_content"

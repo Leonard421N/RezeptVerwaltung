@@ -7,7 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import wizardofba.rezeptverwaltung.MainActivity;
@@ -21,9 +21,9 @@ public class Recipe {
     private String recipeID = UUID.randomUUID().toString();
 
     @TypeConverters(RecipeHashMapConverter.class)
-    private HashMap<String, Float> ingredients;
+    private LinkedHashMap<String, Float> ingredients;
     @TypeConverters(RecipeHashMapConverter.class)
-    private HashMap<String, Float> recipes;
+    private LinkedHashMap<String, Float> recipes;
 
     private String imageUri;
 
@@ -51,8 +51,8 @@ public class Recipe {
     }
 
     private void initClass() {
-        this.ingredients = new HashMap<String, Float>();
-        this.recipes = new HashMap<String, Float>();
+        this.ingredients = new LinkedHashMap<String, Float>();
+        this.recipes = new LinkedHashMap<String, Float>();
         this.price = 0f;
         this.description = "";
     }
@@ -127,7 +127,7 @@ public class Recipe {
         this.name = name;
     }
 
-    public HashMap<String, Float> getRecipes() {
+    public LinkedHashMap<String, Float> getRecipes() {
         return this.recipes;
     }
 
@@ -147,15 +147,15 @@ public class Recipe {
         this.recipeID = recipeID;
     }
 
-    public HashMap<String, Float> getIngredients() {
+    public LinkedHashMap<String, Float> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(HashMap<String, Float> ingredients) {
+    public void setIngredients(LinkedHashMap<String, Float> ingredients) {
         this.ingredients = ingredients;
     }
 
-    public void setRecipes(HashMap<String, Float> recipes) {
+    public void setRecipes(LinkedHashMap<String, Float> recipes) {
         this.recipes = recipes;
     }
 

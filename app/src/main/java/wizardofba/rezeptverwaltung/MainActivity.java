@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         manager = Manager.getInstance(this);
 
         recipeAdapter = new RecipeAdapter();
-        ingredientAdapter = new IngredientAdapter(IngredientAdapter.BASE_STATE);
+        ingredientAdapter = new IngredientAdapter();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -133,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static Manager getManager() {
         return manager;
+    }
+
+    public Resources getSomeResources() {
+        return getResources();
     }
 
     private void fillRecyclerView() {

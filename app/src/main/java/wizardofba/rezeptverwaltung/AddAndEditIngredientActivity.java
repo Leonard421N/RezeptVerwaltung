@@ -147,7 +147,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                     mIngredient.setPrice(new Pair<Float, Float>(amountFloat, priceFloat));
                     mIngredient.setUnit(spinner.toString());
 
-                    if(image != null || !image.equals("")) {
+                    if(image != null && !image.equals("")) {
                         mIngredient.setImageUri(image);
                     }
 

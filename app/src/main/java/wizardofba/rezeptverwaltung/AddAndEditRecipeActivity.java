@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,14 +34,16 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import wizardofba.rezeptverwaltung.Models.Ingredient;
 import wizardofba.rezeptverwaltung.Models.Recipe;
 import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
 
 public class AddAndEditRecipeActivity extends AppCompatActivity {
 
+    static AddAndEditRecipeActivity instance;
     private final int COLUMN_COUNT = 3;
     private int CURRENT_STATE = 0;
     public static final int NEW_STATE = 0;
@@ -51,6 +54,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     EditText name;
     FloatingActionButton saveButton;
+    private Button addIngredient;
     private RecyclerView recyclerView;
     private ImageView imageView;
     private static IngredientAdapter ingredientAdapter;
@@ -58,27 +62,35 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     private Recipe mRecipe;
 
-    private HashMap<String, Float> ingredients;
-    private HashMap<String, Float> recipes;
+    private static LinkedHashMap<String, Float> ingredients = new LinkedHashMap<>();
+    private LinkedHashMap<String, Float> recipes = new LinkedHashMap<>();
     private String image;
     String currentPhotoPath;
     private List<Float> amounts = new ArrayList<>();
     private String description;
+
+    public AddAndEditRecipeActivity() {
+
+    }
+
+    public static synchronized AddAndEditRecipeActivity getInstance() {
+        if(AddAndEditRecipeActivity.instance == null) {
+            AddAndEditRecipeActivity.instance = new AddAndEditRecipeActivity();
+        }
+        return AddAndEditRecipeActivity.instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
+        AddAndEditRecipeActivity.instance = new AddAndEditRecipeActivity();
+
         saveButton = (FloatingActionButton) findViewById(R.id.add_item_button_save);
         name = (EditText) findViewById(R.id.add_item_name);
         imageView = (ImageView) findViewById(R.id.add_item_picture);
-
-        ingredientAdapter = new IngredientAdapter(IngredientAdapter.CUSTOM_STATE);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_add_item);
-        layoutManager = new GridLayoutManager(this, COLUMN_COUNT);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(ingredientAdapter);
+        addIngredient = (Button) findViewById(R.id.add_item_button_add_ingredient);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -88,6 +100,8 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             name.setText(mRecipe != null ? mRecipe.getName() : "");
             int tempPosition = intent.getIntExtra("position", -1);
             Bitmap tempBitmap = MainActivity.getManager().getAllRecipeImgs().get(tempPosition);
+            ingredients.putAll(mRecipe.getIngredients());
+            recipes.putAll(mRecipe.getRecipes());
             if(tempBitmap != null || tempPosition != -1) {
                 imageView.setImageBitmap(tempBitmap);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -95,10 +109,14 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         } else {
             CURRENT_STATE = NEW_STATE;
             mRecipe = new Recipe();
-            ingredients = new HashMap<>();
-            recipes = new HashMap<>();
             description = "";
         }
+
+        ingredientAdapter = new IngredientAdapter(ingredients);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_add_item);
+        layoutManager = new GridLayoutManager(this, COLUMN_COUNT);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(ingredientAdapter);
 
         name.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -115,13 +133,23 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                int result1 = ContextCompat.checkSelfPermission(AddAndEditRecipeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                int result2 = ContextCompat.checkSelfPermission(AddAndEditRecipeActivity.this, Manifest.permission.CAMERA);
-                if (result1 != PackageManager.PERMISSION_GRANTED || result2 != PackageManager.PERMISSION_GRANTED){
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddAndEditRecipeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-                        Toast.makeText(AddAndEditRecipeActivity.this.getApplicationContext(), "External Storage and Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                int result1 = ContextCompat.checkSelfPermission(AddAndEditRecipeActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                int result2 = ContextCompat.checkSelfPermission(AddAndEditRecipeActivity.this,
+                        Manifest.permission.CAMERA);
+                if (result1 != PackageManager.PERMISSION_GRANTED
+                        || result2 != PackageManager.PERMISSION_GRANTED){
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(
+                            AddAndEditRecipeActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        Toast.makeText(AddAndEditRecipeActivity.this.getApplicationContext(),
+                                "External Storage and Camera permission needed." +
+                                        " Please allow in App Settings for additional functionality.",
+                                Toast.LENGTH_LONG).show();
                     } else {
-                        ActivityCompat.requestPermissions(AddAndEditRecipeActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, WRITE_EXTERNAL_STORAGE_CODE);
+                        ActivityCompat.requestPermissions(AddAndEditRecipeActivity.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.CAMERA}, WRITE_EXTERNAL_STORAGE_CODE);
                     }
                 } else {
                     dispatchTakePictureIntent();
@@ -137,10 +165,10 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
                 if(!nameStr.equals("")) {
                     mRecipe.setName(nameStr);
-                    if(recipes != null && recipes.size() != 0) {
+                    if(recipes != null) {
                         mRecipe.setRecipes(recipes);
                     }
-                    if(ingredients != null && ingredients.size() != 0) {
+                    if(ingredients != null) {
                         mRecipe.setIngredients(ingredients);
                     }
                     if(image != null) {
@@ -164,6 +192,15 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                     setResult(RESULT_FIRST_USER, returnIntent);
                     finish();
                 }
+            }
+        });
+
+        addIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ingredients.put(MainActivity.getManager().getAllIngredients().get(0).getIngredientID(), 200.f);
+                ingredientAdapter.setCustomIngredients(ingredients);
+                ingredientAdapter.notifyDataChanged();
             }
         });
     }
@@ -234,7 +271,6 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         Uri imageUri = Uri.parse(currentPhotoPath);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 
@@ -300,6 +336,16 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
+    }
+
+    public void removeIngredient(Ingredient ingredient) {
+        ingredients.remove(ingredient.getIngredientID());
+        ingredientAdapter.notifyDataChanged();
+    }
+
+    public void removeRecipe(Recipe recipe) {
+        recipes.remove(recipe.getRecipeID());
+        ingredientAdapter.notifyDataChanged();
     }
 
 }
