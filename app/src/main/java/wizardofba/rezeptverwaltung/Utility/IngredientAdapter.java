@@ -1,5 +1,6 @@
 package wizardofba.rezeptverwaltung.Utility;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     private static List<Bitmap> mIngredientImgs;
     private static LinkedHashMap<Ingredient, Float> mCustomIngredients;
     private static Ingredient ingredientToDelete = null;
+    private static Context context;
 
     private static int CURRENT_STATE = 0;
     public static final int BASE_STATE = 0;
@@ -62,6 +65,38 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                         v.getContext().startActivity(intent);
                     } else if (CURRENT_STATE == CUSTOM_STATE) {
                         //TODO: Change Amount
+                        //AddAndEditRecipeActivity.getInstance().showChangeAmountDialog();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                        builder.setMessage("Gib eine Menge ein").setTitle("Zutaten-Menge");
+                        builder.setView(R.layout.select_amount);
+
+                        builder.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User clicked OK button
+                                EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.select_amount_amount);
+                                ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
+                                Ingredient tempIngredient = tempIngredients.get(getPosition());
+                                Float tempAmount = Float.valueOf(editAmountText.getText().toString());
+                                mCustomIngredients.put(tempIngredient, tempAmount);
+                                AddAndEditRecipeActivity.getInstance().updateIngredient(tempIngredient, tempAmount);
+                            }
+                        });
+                        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.select_amount_amount);
+                        TextView amountUnit = ((AlertDialog) dialog).findViewById(R.id.select_amount_unit);
+                        ArrayList<Float> tempAmounts = new ArrayList<>(mCustomIngredients.values());
+                        ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
+                        Ingredient tempIngredient = tempIngredients.get(getPosition());
+                        editAmountText.setText(tempAmounts.get(getPosition()).toString());
+                        amountUnit.setText(tempIngredient.getUnit());
                     }
                 }
             });
@@ -107,8 +142,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         mIngredients = MainActivity.getManager().getAllIngredients();
     }
 
-    public IngredientAdapter(HashMap<String, Float> customIngredients) {
+    public IngredientAdapter(HashMap<String, Float> customIngredients, Context context) {
         CURRENT_STATE = CUSTOM_STATE;
+        this.context = context;
         mCustomIngredients = MainActivity.getManager().createCustomIngredientHashMap(customIngredients);
         mIngredientImgs = MainActivity.getManager().loadAllCustomIngredientBitmaps(mCustomIngredients);
     }

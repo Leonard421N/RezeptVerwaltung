@@ -167,6 +167,8 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                             break;
                     }
 
+                    MainActivity.getManager().generateRecipePrices();
+
                     Intent returnIntent = new Intent();
                     setResult(5, returnIntent);
                     finish();

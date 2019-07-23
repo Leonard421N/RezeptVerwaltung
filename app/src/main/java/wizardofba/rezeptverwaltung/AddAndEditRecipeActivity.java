@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -112,7 +113,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             description = "";
         }
 
-        ingredientAdapter = new IngredientAdapter(ingredients);
+        ingredientAdapter = new IngredientAdapter(ingredients, this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_add_item);
         layoutManager = new GridLayoutManager(this, COLUMN_COUNT);
         recyclerView.setLayoutManager(layoutManager);
@@ -178,6 +179,8 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                         mRecipe.setDescription(description);
                     }
 
+                    mRecipe.generatePrice();
+
                     switch (CURRENT_STATE) {
 
                         case NEW_STATE:
@@ -198,9 +201,12 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: show all available Ingredients
+                /*
                 ingredients.put(MainActivity.getManager().getAllIngredients().get(0).getIngredientID(), 200.f);
                 ingredientAdapter.setCustomIngredients(ingredients);
                 ingredientAdapter.notifyDataChanged();
+                */
             }
         });
     }
@@ -338,8 +344,17 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         }
     }
 
+    public Context getContext() {
+        return this;
+    }
+
     public void removeIngredient(Ingredient ingredient) {
         ingredients.remove(ingredient.getIngredientID());
+        ingredientAdapter.notifyDataChanged();
+    }
+
+    public void updateIngredient(Ingredient ingredient, Float amount) {
+        ingredients.put(ingredient.getIngredientID(), amount);
         ingredientAdapter.notifyDataChanged();
     }
 

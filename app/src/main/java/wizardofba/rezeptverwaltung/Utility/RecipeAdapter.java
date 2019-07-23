@@ -75,7 +75,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
     public void onBindViewHolder(@NonNull RecipeAdapter.RecepiAdapterViewHolder viewHolder, int i) {
         Recipe tempRecipe = mRecipes.get(i);
         viewHolder.name.setText(tempRecipe.getName());
-        viewHolder.pricetag.setText(String.format("%s€", tempRecipe.getPrice().toString()));
+        viewHolder.pricetag.setText(String.format("%.2f€", tempRecipe.getPrice()));
 
         if(mRecipeImgs.size() > 0) {
             Bitmap tempBitmap = mRecipeImgs.get(i);

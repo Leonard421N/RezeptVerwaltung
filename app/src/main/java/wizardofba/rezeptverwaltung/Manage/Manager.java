@@ -155,6 +155,12 @@ public class Manager {
         MainActivity.notifyUpdate();
     }
 
+    public void generateRecipePrices() {
+        for (Recipe tempRecipe: allRecipes) {
+            tempRecipe.generatePrice();
+        }
+    }
+
     public void removeRecepi(final Recipe recipe) {
         Thread current = new Thread(new Runnable() {
             @Override
