@@ -1,7 +1,10 @@
 package wizardofba.rezeptverwaltung;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setAppIcon();
 
         manager = Manager.getInstance(this);
 
@@ -76,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void setAppIcon() {
+        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                R.mipmap.ic_launcher);
+        setTaskDescription( new ActivityManager.TaskDescription(null, icon));
     }
 
     @Override

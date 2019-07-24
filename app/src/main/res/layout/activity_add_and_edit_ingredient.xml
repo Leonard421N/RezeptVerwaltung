@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".AddAndEditRecipeActivity"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/add_and_edit_ingredient_forms_container"

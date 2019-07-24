@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".AddAndEditRecipeActivity"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/add_item_forms_container"
@@ -28,12 +30,12 @@
                 android:id="@+id/add_item_title_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title of Recipe"
+                android:text="Rezeptname"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_alignParentTop="true"
                 android:textColor="@color/colorCardViewText"
-                android:textSize="18sp"/>
+                android:textSize="24sp"/>
 
             <EditText
                 android:id="@+id/add_item_name"
@@ -60,30 +62,49 @@
                 android:layout_marginRight="8dp"
                 android:scaleType="fitCenter"/>
 
+            <ImageButton
+                android:id="@+id/add_item_recipe_text_button"
+                android:layout_width="104dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_item_name"
+                android:layout_alignStart="@+id/add_item_name"
+                android:layout_toStartOf="@+id/add_item_picture"
+                app:srcCompat="@drawable/ic_import_contacts_black_24dp" />
+
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/add_item_ingredients_title"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_item_title_and_pic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/colorCardViewText"
-            android:textSize="18sp"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/add_item_title_and_pic">
 
-        <Button
-            android:id="@+id/add_item_button_add_ingredient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:text="Zutat hinzufügen"
-            app:layout_constraintEnd_toEndOf="@+id/add_item_title_and_pic"
-            app:layout_constraintTop_toBottomOf="@+id/add_item_title_and_pic" />
+            <TextView
+                android:id="@+id/add_item_ingredients_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zutaten"
+                android:textStyle="bold"
+                android:layout_alignBottom="@id/add_item_button_add_ingredient"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:paddingBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/colorCardViewText"
+                android:textSize="24sp"/>
+
+            <ImageButton
+                android:id="@+id/add_item_button_add_ingredient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                app:srcCompat="@drawable/ic_list_black_24dp"/>
+
+        </RelativeLayout>
 
         <!--Button
             android:id="@+id/add_item_ingredients_button"

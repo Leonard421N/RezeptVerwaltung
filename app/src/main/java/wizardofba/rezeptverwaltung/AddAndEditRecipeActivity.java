@@ -26,8 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +47,7 @@ import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
 public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     static AddAndEditRecipeActivity instance;
+    private Context context;
     private final int COLUMN_COUNT = 3;
     private int CURRENT_STATE = 0;
     public static final int NEW_STATE = 0;
@@ -57,7 +58,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     EditText name;
     FloatingActionButton saveButton;
-    private Button addIngredient;
+    private ImageButton addIngredient;
     private RecyclerView recyclerView;
     private ImageView imageView;
     private static IngredientAdapter ingredientAdapter;
@@ -74,7 +75,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     private String description;
 
     public AddAndEditRecipeActivity() {
-
+        this.context = this;
     }
 
     public static synchronized AddAndEditRecipeActivity getInstance() {
@@ -94,7 +95,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         saveButton = (FloatingActionButton) findViewById(R.id.add_item_button_save);
         name = (EditText) findViewById(R.id.add_item_name);
         imageView = (ImageView) findViewById(R.id.add_item_picture);
-        addIngredient = (Button) findViewById(R.id.add_item_button_add_ingredient);
+        addIngredient = (ImageButton) findViewById(R.id.add_item_button_add_ingredient);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -104,8 +105,13 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             name.setText(mRecipe != null ? mRecipe.getName() : "");
             int tempPosition = intent.getIntExtra("position", -1);
             Bitmap tempBitmap = MainActivity.getManager().getAllRecipeImgs().get(tempPosition);
-            ingredients.putAll(mRecipe.getIngredients());
-            recipes.putAll(mRecipe.getRecipes());
+
+            ingredients = (LinkedHashMap<String, Float>) mRecipe.getIngredients().clone();
+            recipes = (LinkedHashMap<String, Float>) mRecipe.getRecipes().clone();
+
+            //ingredients.putAll(mRecipe.getIngredients());
+            //recipes.putAll(mRecipe.getRecipes());
+
             if(tempBitmap != null || tempPosition != -1) {
                 imageView.setImageBitmap(tempBitmap);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -205,6 +211,67 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO: show all available Ingredients
+                final ArrayList<Ingredient> selectedIngredients = new ArrayList<>();
+                ArrayList<Ingredient> recipeIngredients = new ArrayList<>(MainActivity.getManager()
+                        .createCustomIngredientHashMap(ingredients).keySet());
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Zutaten");
+
+                ArrayList<String> ingredientStrings = MainActivity.getManager().getAllIngredientNames();
+                CharSequence[] ingredientsCharSeq = new CharSequence[ingredientStrings.size()];
+                final boolean[] checked = new boolean[ingredientStrings.size()];
+
+                int i = 0;
+                for(Ingredient ingredient: MainActivity.getManager().getAllIngredients()) {
+                    checked[i] = false;
+                    for (Ingredient currentIngredient: recipeIngredients) {
+                        if(ingredient.getIngredientID().equals(currentIngredient.getIngredientID())) {
+                            checked[i] = true;
+                            break;
+                        }
+                    }
+                    i++;
+                }
+
+                i = 0;
+                for (String ingredientName: ingredientStrings) {
+                    ingredientsCharSeq[i] = ingredientName;
+                    i++;
+                }
+
+                builder.setMultiChoiceItems(ingredientsCharSeq, checked, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        checked[which] = isChecked;
+                    }
+                });
+
+                builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        int i = 0;
+                        for (Ingredient ingredient: MainActivity.getManager().getAllIngredients()) {
+                            if(checked[i]) {
+                                if(!ingredients.containsKey(ingredient.getIngredientID())) {
+                                    ingredients.put(ingredient.getIngredientID(), ingredient.getPrice().first);
+                                }
+                            } else {
+                                ingredients.remove(ingredient.getIngredientID());
+                            }
+                            i++;
+                        }
+                        ingredientAdapter.setCustomIngredients(ingredients);
+                        ingredientAdapter.notifyDataChanged();
+                    }
+                });
+                builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 /*
                 ingredients.put(MainActivity.getManager().getAllIngredients().get(0).getIngredientID(), 200.f);
                 ingredientAdapter.setCustomIngredients(ingredients);
@@ -369,23 +436,29 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         }
     }
 
+    private void refreshAdapter() {
+        if(ingredientAdapter != null) {
+            ingredientAdapter.notifyDataChanged();
+        }
+    }
+
     public Context getContext() {
         return this;
     }
 
     public void removeIngredient(Ingredient ingredient) {
         ingredients.remove(ingredient.getIngredientID());
-        ingredientAdapter.notifyDataChanged();
+        refreshAdapter();
     }
 
     public void updateIngredient(Ingredient ingredient, Float amount) {
         ingredients.put(ingredient.getIngredientID(), amount);
-        ingredientAdapter.notifyDataChanged();
+        refreshAdapter();
     }
 
     public void removeRecipe(Recipe recipe) {
         recipes.remove(recipe.getRecipeID());
-        ingredientAdapter.notifyDataChanged();
+        refreshAdapter();
     }
 
 }

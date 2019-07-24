@@ -64,8 +64,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                         intent.putExtra("position", getPosition());
                         v.getContext().startActivity(intent);
                     } else if (CURRENT_STATE == CUSTOM_STATE) {
-                        //TODO: Change Amount
-                        //AddAndEditRecipeActivity.getInstance().showChangeAmountDialog();
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                         builder.setMessage("Gib eine Menge ein").setTitle("Zutaten-Menge");
@@ -108,6 +106,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                         case DialogInterface.BUTTON_POSITIVE:
                             if(ingredientToDelete != null) {
                                 AddAndEditRecipeActivity.getInstance().removeIngredient(ingredientToDelete);
+                                int i = 0;
+                                for(Ingredient ingredient: mCustomIngredients.keySet()) {
+                                    if(ingredient.getIngredientID().equals(ingredientToDelete.getIngredientID())) {
+                                        mIngredientImgs.remove(i);
+                                        break;
+                                    }
+                                    i++;
+                                }
                                 mCustomIngredients.remove(ingredientToDelete);
                             }
                             ingredientToDelete = null;
@@ -156,6 +162,8 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                 mIngredients = MainActivity.getManager().getAllIngredients();
                 break;
             case CUSTOM_STATE:
+                mIngredientImgs = MainActivity.getManager().loadAllCustomIngredientBitmaps(mCustomIngredients);
+                //remove imgs manually
                 break;
         }
         notifyDataSetChanged();
