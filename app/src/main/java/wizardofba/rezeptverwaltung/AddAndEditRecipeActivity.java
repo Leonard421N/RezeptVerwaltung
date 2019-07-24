@@ -59,6 +59,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     EditText name;
     FloatingActionButton saveButton;
     private ImageButton addIngredient;
+    private ImageButton showDescription;
     private RecyclerView recyclerView;
     private ImageView imageView;
     private static IngredientAdapter ingredientAdapter;
@@ -96,6 +97,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         name = (EditText) findViewById(R.id.add_item_name);
         imageView = (ImageView) findViewById(R.id.add_item_picture);
         addIngredient = (ImageButton) findViewById(R.id.add_item_button_add_ingredient);
+        showDescription = (ImageButton) findViewById(R.id.add_item_recipe_text_button);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -210,7 +212,6 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: show all available Ingredients
                 final ArrayList<Ingredient> selectedIngredients = new ArrayList<>();
                 ArrayList<Ingredient> recipeIngredients = new ArrayList<>(MainActivity.getManager()
                         .createCustomIngredientHashMap(ingredients).keySet());
@@ -265,6 +266,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                         ingredientAdapter.notifyDataChanged();
                     }
                 });
+
                 builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
@@ -272,11 +274,34 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-                /*
-                ingredients.put(MainActivity.getManager().getAllIngredients().get(0).getIngredientID(), 200.f);
-                ingredientAdapter.setCustomIngredients(ingredients);
-                ingredientAdapter.notifyDataChanged();
-                */
+            }
+        });
+
+        showDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Beschreibung");
+                builder.setView(R.layout.description_recipe);
+
+                builder.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.description_text);
+                        mRecipe.setDescription(editAmountText.getText().toString());
+                    }
+                });
+                builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.description_text);
+                editAmountText.setText(mRecipe.getDescription());
             }
         });
     }

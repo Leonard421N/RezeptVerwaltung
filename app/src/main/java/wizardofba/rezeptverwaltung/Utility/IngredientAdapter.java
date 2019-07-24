@@ -59,11 +59,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                 @Override
                 public void onClick(View v) {
                     if (CURRENT_STATE == BASE_STATE) {
+
                         Intent intent = new Intent(v.getContext(), AddAndEditIngredientActivity.class);
                         intent.putExtra("id", mIngredients.get(getPosition()).getIngredientID());
                         intent.putExtra("position", getPosition());
                         v.getContext().startActivity(intent);
                     } else if (CURRENT_STATE == CUSTOM_STATE) {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                         builder.setMessage("Gib eine Menge ein").setTitle("Zutaten-Menge");
@@ -102,6 +104,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
                             if(ingredientToDelete != null) {

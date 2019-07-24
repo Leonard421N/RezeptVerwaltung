@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/description_text"
+        android:inputType="textMultiLine"
+        android:lines="10"
+        android:minLines="10"
+        android:gravity="top|left"
+        android:maxLines="100"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        android:imeOptions="actionDone"
+        />
+
+</RelativeLayout>
