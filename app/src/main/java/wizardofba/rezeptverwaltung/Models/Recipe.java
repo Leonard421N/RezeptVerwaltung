@@ -115,6 +115,25 @@ public class Recipe {
         this.price = tempPrice;
     }
 
+    public String generateShareText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.name).append(": \n\n");
+        stringBuilder.append(description);
+        stringBuilder.append("\n");
+
+        LinkedHashMap<Ingredient, Float> tempIngredients = MainActivity.getManager()
+                .createCustomIngredientHashMap(ingredients);
+        ArrayList<Ingredient> tempIngredientsList = new ArrayList<>(tempIngredients.keySet());
+        ArrayList<Float> tempAmounts = new ArrayList<>(tempIngredients.values());
+
+        int i = 0;
+        for (Ingredient ingredient: tempIngredientsList) {
+            stringBuilder.append("- ").append(ingredient.getName()).append(" ").append(tempAmounts.get(i).toString()).append(ingredient.getUnit()).append("\n");
+            i++;
+        }
+        return stringBuilder.toString();
+    }
+
     public String getRecipeID() {
         return recipeID;
     }

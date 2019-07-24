@@ -197,7 +197,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.delete_menu, menu);
+        getMenuInflater().inflate(R.menu.recipe_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

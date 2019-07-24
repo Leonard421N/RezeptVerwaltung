@@ -15,10 +15,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +62,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     private ImageView imageView;
     private static IngredientAdapter ingredientAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private ShareActionProvider shareActionProvider;
 
     private Recipe mRecipe;
 
@@ -213,7 +216,11 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.delete_menu, menu);
+        if(CURRENT_STATE == UPDATE_STATE) {
+            getMenuInflater().inflate(R.menu.recipe_menu, menu);
+            MenuItem shareMenuItem = menu.findItem(R.id.share_button);
+            shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareMenuItem);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -221,13 +228,31 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.delete_button) {
+        switch (id) {
+            case R.id.delete_button:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Willst du das Rezept wirklich löschen?").setPositiveButton("Ja", dialogClickListener)
+                        .setNegativeButton("Nein", dialogClickListener).show();
+                break;
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Willst du das Rezept wirklich löschen?").setPositiveButton("Ja", dialogClickListener)
-                    .setNegativeButton("Nein", dialogClickListener).show();
+            case R.id.share_button:
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                //shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, mRecipe.generateShareText());
+                shareIntent.setType("text/plain");
+                setShareIntent(shareIntent);
+                startActivity(Intent.createChooser(shareIntent, "Rezept teilen mit..."));
+                break;
         }
-        return super.onOptionsItemSelected(item);
+
+        return true;
+    }
+
+    private void setShareIntent(Intent shareIntent) {
+        if (shareActionProvider != null) {
+            shareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
