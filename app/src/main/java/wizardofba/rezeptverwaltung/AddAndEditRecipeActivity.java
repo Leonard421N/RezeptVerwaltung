@@ -113,9 +113,6 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             ingredients = (LinkedHashMap<String, Float>) mRecipe.getIngredients().clone();
             recipes = (LinkedHashMap<String, Float>) mRecipe.getRecipes().clone();
 
-            //ingredients.putAll(mRecipe.getIngredients());
-            //recipes.putAll(mRecipe.getRecipes());
-
             if(tempBitmap != null || tempPosition != -1) {
                 imageView.setImageBitmap(tempBitmap);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -316,12 +313,15 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                 int i = 1;
                 for (Ingredient ingredient: MainActivity.getManager()
                         .createCustomIngredientHashMap(ingredients).keySet()) {
-                    stringUrl.append("ASIN.").append(i).append("=");
-                    stringUrl.append(ingredient.getAmazonID());
-                    stringUrl.append("&").append("Quantity.").append(i).append("=");
-                    stringUrl.append(1);
-                    if(i != ingredients.size()) {
-                        stringUrl.append("&");
+                    if(ingredient.getAmazonID() != null) {
+                        stringUrl.append("ASIN.").append(i).append("=");
+                        stringUrl.append(ingredient.getAmazonID());
+                        stringUrl.append("&").append("Quantity.").append(i).append("=");
+                        stringUrl.append(1);
+                        if (i != ingredients.size()) {
+                            stringUrl.append("&");
+                        }
+                        i++;
                     }
                 }
 
@@ -356,7 +356,6 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             case R.id.share_button:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                //shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, mRecipe.generateShareText());
                 shareIntent.setType("text/plain");
                 setShareIntent(shareIntent);
