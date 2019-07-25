@@ -207,6 +207,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
         });
 
         amazon.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
@@ -222,11 +223,13 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                         mIngredient.setAmazonUrl(webView.getUrl());
                     }
                 });
+
                 builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                     }
                 });
+
                 builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
                     @Override
                     public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -235,6 +238,8 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                                 !event.isCanceled()) {
                             if(webView.canGoBack()) {
                                 webView.goBack();
+                            } else {
+                                dialog.cancel();
                             }
                             return true;
                         }
@@ -260,15 +265,6 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 } */
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
