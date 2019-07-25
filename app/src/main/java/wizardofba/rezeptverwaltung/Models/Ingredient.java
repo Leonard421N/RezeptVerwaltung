@@ -27,6 +27,7 @@ public class Ingredient {
     private String name;
     private String description;
     private String unit;
+    private String amazonUrl;
 
     public Ingredient() {
     }
@@ -98,5 +99,21 @@ public class Ingredient {
 
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
+    }
+
+    public String getAmazonUrl() {
+        return amazonUrl;
+    }
+
+    public void setAmazonUrl(String amazonUrl) {
+        this.amazonUrl = amazonUrl;
+    }
+
+    public String getAmazonID() {
+        try {
+            return amazonUrl.split("/dp/", 2)[1].split("/",2)[0];
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

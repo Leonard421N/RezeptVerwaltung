@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,9 +23,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +51,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 2;
 
     Ingredient mIngredient;
+    private Context context;
 
 
     private Pair<Float, Float> price;
@@ -59,6 +65,9 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
     Spinner spinner;
     String[] tempStrArray;
     ImageView imageView;
+    ImageButton amazon;
+    WebView webView;
+    RelativeLayout webDialog;
 
     String currentPhotoPath;
 
@@ -67,12 +76,15 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_and_edit_ingredient);
 
+        this.context = this;
+
         saveButton = (FloatingActionButton) findViewById(R.id.add_and_edit_ingredient_button_save);
         nameEditText = (EditText) findViewById(R.id.add_and_edit_ingredient_name);
         priceEditText = (EditText) findViewById(R.id.add_and_edit_ingredient_price);
         amount = (EditText) findViewById(R.id.add_and_edit_ingredient_amount);
         spinner = (Spinner) findViewById(R.id.add_and_edit_ingredient_amount_unit_spinner);
         imageView = (ImageView) findViewById(R.id.add_and_edit_ingredient_picture);
+        amazon = (ImageButton) findViewById(R.id.add_and_edit_ingredient_amazon);
 
         tempStrArray = getResources().getStringArray(R.array.string_array_units);
 
@@ -193,6 +205,70 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 }
             }
         });
+
+        amazon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                webView = new WebView(context);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Bei Amazon suchen");
+                builder.setView(webView);
+
+                builder.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        mIngredient.setAmazonUrl(webView.getUrl());
+                    }
+                });
+                builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_BACK &&
+                                event.getAction() == KeyEvent.ACTION_UP &&
+                                !event.isCanceled()) {
+                            if(webView.canGoBack()) {
+                                webView.goBack();
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+
+                webView.setWebViewClient(new WebViewClient());
+                if(mIngredient.getAmazonUrl() == null) {
+                    webView.loadUrl("https://www.amazon.de/s?k=" + mIngredient.getName());
+                } else {
+                    webView.loadUrl(mIngredient.getAmazonUrl());
+                }
+
+                /*
+                if(mIngredient.getAmazonUrl() == null) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.amazon.de/s?k=" + mIngredient.getName()));
+                    startActivity(browserIntent);
+                } */
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

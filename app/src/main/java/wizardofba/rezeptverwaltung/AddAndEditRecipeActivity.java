@@ -60,6 +60,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     FloatingActionButton saveButton;
     private ImageButton addIngredient;
     private ImageButton showDescription;
+    private ImageButton orderIngredients;
     private RecyclerView recyclerView;
     private ImageView imageView;
     private static IngredientAdapter ingredientAdapter;
@@ -98,6 +99,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.add_item_picture);
         addIngredient = (ImageButton) findViewById(R.id.add_item_button_add_ingredient);
         showDescription = (ImageButton) findViewById(R.id.add_item_recipe_text_button);
+        orderIngredients = (ImageButton) findViewById(R.id.add_item_order_ingredients);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -302,6 +304,30 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
                 EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.description_text);
                 editAmountText.setText(mRecipe.getDescription());
+            }
+        });
+
+        orderIngredients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringBuilder stringUrl = new StringBuilder();
+                stringUrl.append("https://www.amazon.de/gp/aws/cart/add.html?");
+
+                int i = 1;
+                for (Ingredient ingredient: MainActivity.getManager()
+                        .createCustomIngredientHashMap(ingredients).keySet()) {
+                    stringUrl.append("ASIN.").append(i).append("=");
+                    stringUrl.append(ingredient.getAmazonID());
+                    stringUrl.append("&").append("Quantity.").append(i).append("=");
+                    stringUrl.append(1);
+                    if(i != ingredients.size()) {
+                        stringUrl.append("&");
+                    }
+                }
+
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse(stringUrl.toString()));
+                startActivity(browserIntent);
             }
         });
     }

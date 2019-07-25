@@ -102,10 +102,16 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
-                int index = allRecipes.indexOf(recipe);
-                allRecipes.set(index, recipe);
-                allRecipeImgs.set(index, MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(recipe.getImageUri())));
-                recipeDatabase.daoAccess().updateRecipe(recipe);
+                if(recipe != null) {
+                    int index = allRecipes.indexOf(recipe);
+                    allRecipes.set(index, recipe);
+                    if (recipe.getImageUri() != null) {
+                        allRecipeImgs.set(index, MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(recipe.getImageUri())));
+                    } else {
+                        allRecipeImgs.set(index, null);
+                    }
+                    recipeDatabase.daoAccess().updateRecipe(recipe);
+                }
             }
         });
         current.start();
@@ -143,10 +149,16 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
-                int index = allIngredients.indexOf(ingredient);
-                allIngredients.set(index, ingredient);
-                allIngredientImgs.set(index, MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(ingredient.getImageUri())));
-                recipeDatabase.daoAccess().updateIngredient(ingredient);
+                if(ingredient != null) {
+                    int index = allIngredients.indexOf(ingredient);
+                    allIngredients.set(index, ingredient);
+                    if (ingredient.getImageUri() != null) {
+                        allIngredientImgs.set(index, MediaLoader.getInstance().loadBitmapFromUri(Uri.parse(ingredient.getImageUri())));
+                    } else {
+                        allIngredientImgs.set(index, null);
+                    }
+                    recipeDatabase.daoAccess().updateIngredient(ingredient);
+                }
             }
         });
         current.start();
