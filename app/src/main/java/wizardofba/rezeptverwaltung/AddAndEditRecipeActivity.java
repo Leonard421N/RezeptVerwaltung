@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -207,7 +208,12 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                     Intent returnIntent = new Intent();
                     setResult(RESULT_FIRST_USER, returnIntent);
                     finish();
+                } else {
+                    name.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(name, InputMethodManager.SHOW_IMPLICIT);
                 }
+
             }
         });
 

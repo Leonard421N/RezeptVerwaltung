@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -189,11 +190,16 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                     Intent returnIntent = new Intent();
                     setResult(5, returnIntent);
                     finish();
+                } else {
+                    nameEditText.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(nameEditText, InputMethodManager.SHOW_IMPLICIT);
                 }
             }
         });
 
         imageView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 

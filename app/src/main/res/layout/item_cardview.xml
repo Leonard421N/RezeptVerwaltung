@@ -63,7 +63,7 @@
                 android:layout_toRightOf="@id/pic"
                 android:textAlignment="textEnd"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/item_cardview_pricetag"
+                android:text="@string/item_card_view_pricetag"
                 android:textColor="@color/colorCardViewText"
                 android:textSize="20sp"
                 tools:ignore="RtlHardcoded" />

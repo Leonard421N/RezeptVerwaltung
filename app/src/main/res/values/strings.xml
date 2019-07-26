@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rezepte Verwaltung</string>
+    <string name="app_name">Munchie</string>
     <string name="title_home">Rezepte</string>
     <string name="title_ingredients">Alle Zutaten</string>
     <string name="title_settings">Einstellungen</string>
@@ -16,7 +16,7 @@
     <string name="add_and_edit_ingredient_price_currency">€</string>
     <string name="add_and_edit_ingredient_amount">0.42</string>
     <string name="add_and_edit_ingredient_button_save">Speichern</string>
-    <string name="item_cardview_pricetag">2,00€</string>
+    <string name="item_card_view_pricetag">2,00€</string>
     <string name="select_amount_unit">kg</string>
     <string name="add_and_edit_ingredient_title_name">Name der Zutat</string>
     <string-array name="string_array_units">
