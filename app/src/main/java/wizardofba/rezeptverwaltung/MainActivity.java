@@ -16,9 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
-import wizardofba.rezeptverwaltung.Manage.Manager;
-import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
-import wizardofba.rezeptverwaltung.Utility.RecipeAdapter;
+import wizardofba.rezeptverwaltung.manage.Manager;
+import wizardofba.rezeptverwaltung.utility.IngredientAdapter;
+import wizardofba.rezeptverwaltung.utility.RecipeAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Manage;
+package wizardofba.rezeptverwaltung.manage;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -8,8 +8,8 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import wizardofba.rezeptverwaltung.Models.Ingredient;
-import wizardofba.rezeptverwaltung.Models.Recipe;
+import wizardofba.rezeptverwaltung.models.Ingredient;
+import wizardofba.rezeptverwaltung.models.Recipe;
 
 @Dao
 public interface DaoAccess {

@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Utility;
+package wizardofba.rezeptverwaltung.utility;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

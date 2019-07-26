@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Utility;
+package wizardofba.rezeptverwaltung.utility;
 
 import android.arch.persistence.room.TypeConverter;
 import android.util.Pair;

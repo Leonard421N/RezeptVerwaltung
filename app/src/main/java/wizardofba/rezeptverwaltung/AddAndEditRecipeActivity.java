@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,9 +41,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import wizardofba.rezeptverwaltung.Models.Ingredient;
-import wizardofba.rezeptverwaltung.Models.Recipe;
-import wizardofba.rezeptverwaltung.Utility.IngredientAdapter;
+import wizardofba.rezeptverwaltung.models.Ingredient;
+import wizardofba.rezeptverwaltung.models.Recipe;
+import wizardofba.rezeptverwaltung.utility.IngredientAdapter;
 
 public class AddAndEditRecipeActivity extends AppCompatActivity {
 
@@ -90,7 +91,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
+        setContentView(R.layout.activity_add_and_edit_recipe);
 
         AddAndEditRecipeActivity.instance = new AddAndEditRecipeActivity();
 
@@ -113,10 +114,12 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             ingredients = (LinkedHashMap<String, Float>) mRecipe.getIngredients().clone();
             recipes = (LinkedHashMap<String, Float>) mRecipe.getRecipes().clone();
 
-            if(tempBitmap != null || tempPosition != -1) {
+            if(tempBitmap != null) {
                 imageView.setImageBitmap(tempBitmap);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else {
+                imageView.setImageDrawable(this.getDrawable(R.drawable.ic_recipe));
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             CURRENT_STATE = NEW_STATE;
             mRecipe = new Recipe();
@@ -313,7 +316,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                 int i = 1;
                 for (Ingredient ingredient: MainActivity.getManager()
                         .createCustomIngredientHashMap(ingredients).keySet()) {
-                    if(ingredient.getAmazonID() != null) {
+                    if(ingredient != null && ingredient.getAmazonID() != null && ingredient.getAmazonID().length() == 10) {
                         stringUrl.append("ASIN.").append(i).append("=");
                         stringUrl.append(ingredient.getAmazonID());
                         stringUrl.append("&").append("Quantity.").append(i).append("=");
@@ -321,8 +324,8 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                         if (i != ingredients.size()) {
                             stringUrl.append("&");
                         }
-                        i++;
                     }
+                    i++;
                 }
 
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW);
@@ -450,7 +453,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(

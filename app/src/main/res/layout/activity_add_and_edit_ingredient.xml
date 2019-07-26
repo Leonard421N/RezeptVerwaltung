@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:text="Name der Zutat"
+                android:text="@string/add_and_edit_ingredient_title_name"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
                 android:textColor="@color/colorCardViewText"
@@ -45,11 +45,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/add_and_edit_ingredient_title_name"
                 android:layout_alignParentLeft="true"
+                android:hint="@string/add_and_edit_ingredient_name"
                 android:layout_toLeftOf="@id/add_and_edit_ingredient_picture"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:inputType="text"
-                tools:ignore="Autofill" />
+                tools:ignore="Autofill,RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/add_and_edit_ingredient_picture"
@@ -60,7 +61,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="8dp"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                tools:ignore="ContentDescription,RtlHardcoded" />
 
             <ImageButton
                 android:id="@+id/add_and_edit_ingredient_amazon"
@@ -74,7 +76,8 @@
                 android:layout_toStartOf="@+id/add_and_edit_ingredient_picture"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/ic_amazon_logo" />
+                app:srcCompat="@drawable/ic_amazon_logo"
+                tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
@@ -82,7 +85,7 @@
             android:id="@+id/add_and_edit_ingredients_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preis/Menge"
+            android:text="@string/add_and_edit_ingredients_title"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:paddingBottom="8dp"
@@ -111,18 +114,21 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:hint="0.42"
+                android:hint="@string/add_and_edit_ingredient_price"
                 android:textAlignment="textEnd"
                 android:inputType="numberDecimal"
-                android:textSize="42sp"/>
+                android:textSize="42sp"
+                tools:ignore="Autofill" />
 
             <TextView
+                android:id="@+id/add_and_edit_ingredient_price_currency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/add_and_edit_ingredient_price"
-                android:text="€"
-                android:textSize="42sp"/>
+                android:text="@string/add_and_edit_ingredient_price_currency"
+                android:textSize="42sp"
+                tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>
 
@@ -140,7 +146,7 @@
                 android:layout_centerHorizontal="true"
                 android:inputType="numberDecimal"
                 android:textAlignment="textEnd"
-                android:hint="0.42"
+                android:hint="@string/add_and_edit_ingredient_amount"
                 android:textSize="42sp" />
 
             <Spinner
@@ -148,7 +154,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/add_and_edit_ingredient_amount" />
+                android:layout_toRightOf="@+id/add_and_edit_ingredient_amount"
+                tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>
 
@@ -159,10 +166,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_save_white_24dp"
-        android:text="Speichern"
+        android:text="@string/add_and_edit_ingredient_button_save"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

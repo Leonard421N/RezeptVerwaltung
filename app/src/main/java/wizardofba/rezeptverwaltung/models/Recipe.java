@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Models;
+package wizardofba.rezeptverwaltung.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import wizardofba.rezeptverwaltung.MainActivity;
-import wizardofba.rezeptverwaltung.Utility.RecipeHashMapConverter;
+import wizardofba.rezeptverwaltung.utility.RecipeHashMapConverter;
 
 @Entity
 public class Recipe {

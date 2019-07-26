@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Manage;
+package wizardofba.rezeptverwaltung.manage;
 
 import android.app.Activity;
 import android.arch.persistence.room.Room;
@@ -15,9 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import wizardofba.rezeptverwaltung.MainActivity;
-import wizardofba.rezeptverwaltung.Models.Ingredient;
-import wizardofba.rezeptverwaltung.Models.Recipe;
-import wizardofba.rezeptverwaltung.Utility.MediaLoader;
+import wizardofba.rezeptverwaltung.models.Ingredient;
+import wizardofba.rezeptverwaltung.models.Recipe;
+import wizardofba.rezeptverwaltung.utility.MediaLoader;
 
 public class Manager {
 

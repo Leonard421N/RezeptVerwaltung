@@ -1,4 +1,4 @@
-package wizardofba.rezeptverwaltung.Models;
+package wizardofba.rezeptverwaltung.models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -9,7 +9,7 @@ import android.util.Pair;
 
 import java.util.UUID;
 
-import wizardofba.rezeptverwaltung.Utility.IngredientPriceConverter;
+import wizardofba.rezeptverwaltung.utility.IngredientPriceConverter;
 
 @Entity
 public class Ingredient {
@@ -111,7 +111,7 @@ public class Ingredient {
 
     public String getAmazonID() {
         try {
-            return amazonUrl.split("/dp/", 2)[1].split("/",2)[0];
+            return amazonUrl.split("/dp/|/gp/products/|/d/", 2)[1].split("/",2)[0];
         } catch (Exception e) {
             return null;
         }

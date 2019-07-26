@@ -3,6 +3,22 @@
     <string name="title_home">Rezepte</string>
     <string name="title_ingredients">Alle Zutaten</string>
     <string name="title_settings">Einstellungen</string>
+    <string name="item_grid_view_example_text">Kaffee</string>
+    <string name="item_grid_view_example_text_amount">200ml</string>
+    <string name="item_grid_view_example_text_price">0.20€</string>
+    <string name="add_item_title_name">Rezeptname</string>
+    <string name="add_item_name">Name</string>
+    <string name="add_item_ingredients_title">Zutaten</string>
+    <string name="add_item_button_save">Speichern</string>
+    <string name="add_and_edit_ingredient_name">Name</string>
+    <string name="add_and_edit_ingredients_title">Preis/Menge</string>
+    <string name="add_and_edit_ingredient_price">0.42</string>
+    <string name="add_and_edit_ingredient_price_currency">€</string>
+    <string name="add_and_edit_ingredient_amount">0.42</string>
+    <string name="add_and_edit_ingredient_button_save">Speichern</string>
+    <string name="item_cardview_pricetag">2,00€</string>
+    <string name="select_amount_unit">kg</string>
+    <string name="add_and_edit_ingredient_title_name">Name der Zutat</string>
     <string-array name="string_array_units">
         <item>EL</item>
         <item>TL</item>

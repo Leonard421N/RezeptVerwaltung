@@ -1,6 +1,7 @@
 package wizardofba.rezeptverwaltung;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
@@ -39,7 +41,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import wizardofba.rezeptverwaltung.Models.Ingredient;
+import wizardofba.rezeptverwaltung.models.Ingredient;
 
 public class AddAndEditIngredientActivity extends AppCompatActivity {
 
@@ -105,10 +107,13 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
             int tempPosition = intent.getIntExtra("position", -1);
             Bitmap tempBitmap = MainActivity.getManager().getAllIngredientImgs().get(tempPosition);
-            if(tempBitmap != null || tempPosition != -1) {
+            if(tempBitmap != null) {
                 imageView.setImageBitmap(tempBitmap);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else {
+                imageView.setImageDrawable(getDrawable(R.drawable.ic_harvest));
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
             int i = 0;
             for(; i < tempStrArray.length; i++) {
                 if(mIngredient.getUnit().equals(tempStrArray[i])) {
@@ -211,15 +216,24 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                RelativeLayout relativeLayout = new RelativeLayout(context);
                 webView = new WebView(context);
+                EditText edit = new EditText(context);
+                edit.setFocusable(true);
+                edit.requestFocus();
+                edit.setVisibility(View.INVISIBLE);
+                relativeLayout.addView(webView);
+                relativeLayout.addView(edit);
+                WebSettings webSettings = webView.getSettings();
+                webSettings.setJavaScriptEnabled(true);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Bei Amazon suchen");
-                builder.setView(webView);
+                builder.setView(relativeLayout);
 
                 builder.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
+                        // User clicked Save button
                         mIngredient.setAmazonUrl(webView.getUrl());
                     }
                 });
@@ -248,7 +262,6 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 });
 
                 AlertDialog dialog = builder.create();
-
                 dialog.show();
 
                 webView.setWebViewClient(new WebViewClient());
@@ -258,11 +271,6 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                     webView.loadUrl(mIngredient.getAmazonUrl());
                 }
 
-                /*
-                if(mIngredient.getAmazonUrl() == null) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.amazon.de/s?k=" + mIngredient.getName()));
-                    startActivity(browserIntent);
-                } */
             }
         });
     }
@@ -365,7 +373,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(

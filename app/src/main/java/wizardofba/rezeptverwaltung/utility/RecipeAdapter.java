@@ -1,5 +1,6 @@
-package wizardofba.rezeptverwaltung.Utility;
+package wizardofba.rezeptverwaltung.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import wizardofba.rezeptverwaltung.AddAndEditRecipeActivity;
 import wizardofba.rezeptverwaltung.MainActivity;
-import wizardofba.rezeptverwaltung.Models.Recipe;
+import wizardofba.rezeptverwaltung.models.Recipe;
 import wizardofba.rezeptverwaltung.R;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdapterViewHolder> {
@@ -71,6 +72,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecepiAdap
 
 
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.RecepiAdapterViewHolder viewHolder, int i) {
         Recipe tempRecipe = mRecipes.get(i);

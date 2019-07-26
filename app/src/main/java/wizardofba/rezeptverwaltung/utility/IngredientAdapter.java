@@ -1,5 +1,6 @@
-package wizardofba.rezeptverwaltung.Utility;
+package wizardofba.rezeptverwaltung.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,8 +24,8 @@ import java.util.List;
 import wizardofba.rezeptverwaltung.AddAndEditIngredientActivity;
 import wizardofba.rezeptverwaltung.AddAndEditRecipeActivity;
 import wizardofba.rezeptverwaltung.MainActivity;
-import wizardofba.rezeptverwaltung.Models.Ingredient;
 import wizardofba.rezeptverwaltung.R;
+import wizardofba.rezeptverwaltung.models.Ingredient;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder> {
 
@@ -56,6 +57,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             this.price = (TextView) itemView.findViewById(R.id.card_view_grid_price);
 
             cardView.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View v) {
                     if (CURRENT_STATE == BASE_STATE) {
@@ -95,8 +97,10 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                         ArrayList<Float> tempAmounts = new ArrayList<>(mCustomIngredients.values());
                         ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
                         Ingredient tempIngredient = tempIngredients.get(getPosition());
-                        editAmountText.setText(tempAmounts.get(getPosition()).toString());
-                        amountUnit.setText(tempIngredient.getUnit());
+                        if(editAmountText != null && amountUnit != null) {
+                            editAmountText.setText(tempAmounts.get(getPosition()).toString());
+                            amountUnit.setText(tempIngredient.getUnit());
+                        }
                     }
                 }
             });
@@ -179,6 +183,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         return new IngredientAdapterViewHolder(v);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull IngredientAdapter.IngredientAdapterViewHolder viewHolder, int i) {
         Ingredient tempIngredient;
@@ -192,7 +197,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                 break;
 
             case CUSTOM_STATE:
-                if(mCustomIngredients.size() > 0) {
+                if(mCustomIngredients != null && mCustomIngredients.size() > 0) {
                     ArrayList<Ingredient> tempCustomIngredients = new ArrayList<>(mCustomIngredients.keySet());
                     tempIngredient = tempCustomIngredients.get(i);
                     viewHolder.name.setText(tempIngredient.getName());
