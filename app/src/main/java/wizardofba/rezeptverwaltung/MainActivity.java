@@ -66,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
                 switch(CURRENT_STATE) {
 
                     case STATE_RECEPIS:
-                        intent = new Intent(MainActivity.this, AddAndEditRecipeActivity.class);
+                        intent = new Intent(MainActivity.this,
+                                AddAndEditRecipeActivity.class);
                         startActivityForResult(intent, RESULT_FIRST_USER);
                         break;
 
                     case STATE_INGREDIENTS:
-                        intent = new Intent(MainActivity.this, AddAndEditIngredientActivity.class);
+                        intent = new Intent(MainActivity.this,
+                                AddAndEditIngredientActivity.class);
                         startActivityForResult(intent, 5);
                         break;
 

@@ -283,7 +283,11 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.recipe_menu, menu);
+        if(CURRENT_STATE == UPDATE_STATE) {
+            getMenuInflater().inflate(R.menu.recipe_menu, menu);
+            MenuItem shareMenuItem = menu.findItem(R.id.share_button);
+            shareMenuItem.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
