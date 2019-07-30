@@ -76,12 +76,15 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                         builder.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User clicked OK button
-                                EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.select_amount_amount);
-                                ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
+                                EditText editAmountText = ((AlertDialog) dialog)
+                                        .findViewById(R.id.select_amount_amount);
+                                ArrayList<Ingredient> tempIngredients
+                                        = new ArrayList<>(mCustomIngredients.keySet());
                                 Ingredient tempIngredient = tempIngredients.get(getPosition());
                                 Float tempAmount = Float.valueOf(editAmountText.getText().toString());
                                 mCustomIngredients.put(tempIngredient, tempAmount);
-                                AddAndEditRecipeActivity.getInstance().updateIngredient(tempIngredient, tempAmount);
+                                AddAndEditRecipeActivity.getInstance()
+                                        .updateIngredient(tempIngredient, tempAmount);
                             }
                         });
                         builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
@@ -92,8 +95,10 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                         AlertDialog dialog = builder.create();
                         dialog.show();
 
-                        EditText editAmountText = ((AlertDialog) dialog).findViewById(R.id.select_amount_amount);
-                        TextView amountUnit = ((AlertDialog) dialog).findViewById(R.id.select_amount_unit);
+                        EditText editAmountText = ((AlertDialog) dialog)
+                                .findViewById(R.id.select_amount_amount);
+                        TextView amountUnit = ((AlertDialog) dialog)
+                                .findViewById(R.id.select_amount_unit);
                         ArrayList<Float> tempAmounts = new ArrayList<>(mCustomIngredients.values());
                         ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
                         Ingredient tempIngredient = tempIngredients.get(getPosition());
@@ -136,12 +141,16 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
-                    if(tempIngredients.size() > 0) {
-                        ingredientToDelete = tempIngredients.get(getPosition());
-                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                        builder.setMessage("Willst du die Zutat aus dem Rezept nehmen?").setPositiveButton("Ja", dialogClickListener)
-                                .setNegativeButton("Nein", dialogClickListener).show();
+
+                    if(CURRENT_STATE != BASE_STATE) {
+                        ArrayList<Ingredient> tempIngredients = new ArrayList<>(mCustomIngredients.keySet());
+                        if (tempIngredients.size() > 0) {
+                            ingredientToDelete = tempIngredients.get(getPosition());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                            builder.setMessage("Willst du die Zutat aus dem Rezept nehmen?")
+                                    .setPositiveButton("Ja", dialogClickListener)
+                                    .setNegativeButton("Nein", dialogClickListener).show();
+                        }
                     }
                     return false;
                 }
@@ -192,8 +201,8 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             case BASE_STATE:
                 tempIngredient = mIngredients.get(i);
                 viewHolder.name.setText(tempIngredient.getName());
-                viewHolder.amount.setText(String.format("%s " + tempIngredient.getUnit(), tempIngredient.getPrice().first.toString()));
-                viewHolder.price.setText(String.format("%s €", tempIngredient.getPrice().second.toString()));
+                viewHolder.amount.setText(String.format("%s " + tempIngredient.getUnit(), tempIngredient.getPriceAndAmount().first.toString()));
+                viewHolder.price.setText(String.format("%s €", tempIngredient.getPriceAndAmount().second.toString()));
                 break;
 
             case CUSTOM_STATE:

@@ -103,8 +103,8 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
             mIngredient = MainActivity.getManager().getIngredientPerUUID(id);
             nameEditText.setText(mIngredient != null ? mIngredient.getName() : "");
-            amount.setText(mIngredient != null ? mIngredient.getPrice().first.toString() : "");
-            priceEditText.setText(mIngredient != null ? mIngredient.getPrice().second.toString() : "");
+            amount.setText(mIngredient != null ? mIngredient.getPriceAndAmount().first.toString() : "");
+            priceEditText.setText(mIngredient != null ? mIngredient.getPriceAndAmount().second.toString() : "");
 
             int tempPosition = intent.getIntExtra("position", -1);
             Bitmap tempBitmap = MainActivity.getManager().getAllIngredientImgs().get(tempPosition);
@@ -162,7 +162,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 if(!nameStr.equals("")) {
 
                     mIngredient.setName(nameStr);
-                    mIngredient.setPrice(new Pair<Float, Float>(amountFloat, priceFloat));
+                    mIngredient.setPriceAndAmount(new Pair<Float, Float>(amountFloat, priceFloat));
                     mIngredient.setUnit(spinner.toString());
 
                     if(image != null && !image.equals("")) {

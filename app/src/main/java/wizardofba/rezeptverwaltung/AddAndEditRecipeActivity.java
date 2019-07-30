@@ -263,7 +263,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                         for (Ingredient ingredient: MainActivity.getManager().getAllIngredients()) {
                             if(checked[i]) {
                                 if(!ingredients.containsKey(ingredient.getIngredientID())) {
-                                    ingredients.put(ingredient.getIngredientID(), ingredient.getPrice().first);
+                                    ingredients.put(ingredient.getIngredientID(), ingredient.getPriceAndAmount().first);
                                 }
                             } else {
                                 ingredients.remove(ingredient.getIngredientID());

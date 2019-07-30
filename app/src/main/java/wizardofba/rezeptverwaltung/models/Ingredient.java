@@ -20,7 +20,7 @@ public class Ingredient {
 
     //<Amount, Price>
     @TypeConverters(IngredientPriceConverter.class)
-    private Pair<Float, Float> price;
+    private Pair<Float, Float> priceAndAmount;
 
     private String imageUri;
 
@@ -41,7 +41,7 @@ public class Ingredient {
     @Ignore
     public Ingredient(String name, float amount, float price) {
         this.name = name;
-        this.price = new Pair<>(amount, price);
+        this.priceAndAmount = new Pair<>(amount, price);
         this.unit = "ml";
     }
 
@@ -49,7 +49,7 @@ public class Ingredient {
     /** Returns Price per 1 unit of ingredient
      * like 1g = 0.12 cents */
     public Float getBasePrice() {
-        return this.price.second/this.price.first;
+        return this.priceAndAmount.second/this.priceAndAmount.first;
     }
 
     @NonNull
@@ -65,12 +65,12 @@ public class Ingredient {
         this.name = name;
     }
 
-    public Pair<Float, Float> getPrice() {
-        return price;
+    public Pair<Float, Float> getPriceAndAmount() {
+        return priceAndAmount;
     }
 
-    public void setPrice(Pair<Float, Float> price) {
-        this.price = price;
+    public void setPriceAndAmount(Pair<Float, Float> priceAndAmount) {
+        this.priceAndAmount = priceAndAmount;
     }
 
     public String getDescription() {
