@@ -199,6 +199,7 @@ public class Manager {
         Thread current = new Thread(new Runnable() {
             @Override
             public void run() {
+                removeIngredientFromRecipes(ingredient);
                 int index = allIngredients.indexOf(ingredient);
                 allIngredients.remove(ingredient);
                 allIngredientImgs.remove(index);
@@ -212,6 +213,12 @@ public class Manager {
             e.printStackTrace();
         }
         MainActivity.notifyUpdate();
+    }
+
+    private void removeIngredientFromRecipes(Ingredient ingredient) {
+        for (Recipe recipe: allRecipes) {
+            recipe.removeIngredient(ingredient.getIngredientID());
+        }
     }
 
     private void loadAllRecipeBitmaps() {

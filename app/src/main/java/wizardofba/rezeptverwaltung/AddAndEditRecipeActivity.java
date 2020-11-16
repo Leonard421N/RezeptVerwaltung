@@ -96,12 +96,12 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
         AddAndEditRecipeActivity.instance = new AddAndEditRecipeActivity();
 
-        saveButton = (FloatingActionButton) findViewById(R.id.add_item_button_save);
-        name = (EditText) findViewById(R.id.add_item_name);
-        imageView = (ImageView) findViewById(R.id.add_item_picture);
-        addIngredient = (ImageButton) findViewById(R.id.add_item_button_add_ingredient);
-        showDescription = (ImageButton) findViewById(R.id.add_item_recipe_text_button);
-        orderIngredients = (ImageButton) findViewById(R.id.add_item_order_ingredients);
+        saveButton = findViewById(R.id.add_item_button_save);
+        name = findViewById(R.id.add_item_name);
+        imageView = findViewById(R.id.add_item_picture);
+        addIngredient = findViewById(R.id.add_item_button_add_ingredient);
+        showDescription = findViewById(R.id.add_item_recipe_text_button);
+        //orderIngredients = findViewById(R.id.add_item_order_ingredients);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -125,6 +125,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             CURRENT_STATE = NEW_STATE;
             mRecipe = new Recipe();
             description = "";
+            ingredients = new LinkedHashMap<String, Float>();
         }
 
         ingredientAdapter = new IngredientAdapter(ingredients, this);
@@ -256,7 +257,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
                         int i = 0;
@@ -313,6 +314,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             }
         });
 
+        /*
         orderIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,6 +341,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                 startActivity(browserIntent);
             }
         });
+        */
     }
 
     @Override
@@ -520,5 +523,11 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
         refreshAdapter();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ingredientAdapter = null;
+        recyclerView = null;
+    }
 }
 

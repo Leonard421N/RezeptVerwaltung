@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         recipeAdapter = new RecipeAdapter();
         ingredientAdapter = new IngredientAdapter();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
 
         linearLayoutManager = new LinearLayoutManager(this);
         gridLayoutManager = new GridLayoutManager(this, 3);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recipeAdapter);
 
-        addFab = (FloatingActionButton) findViewById(R.id.fab_add);
+        addFab = findViewById(R.id.fab_add);
 
         addFab.setOnClickListener(new View.OnClickListener() {
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         IngredientAdapter.setCurrentState(IngredientAdapter.BASE_STATE);
+        fillRecyclerView();
     }
 
     @Override

@@ -64,7 +64,7 @@
                 android:scaleType="fitCenter"
                 tools:ignore="ContentDescription,RtlHardcoded" />
 
-            <ImageButton
+            <!--ImageButton
                 android:id="@+id/add_and_edit_ingredient_amazon"
                 android:layout_width="104dp"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/ic_amazon_logo"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription" /-->
 
         </RelativeLayout>
 

@@ -81,13 +81,13 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
         this.context = this;
 
-        saveButton = (FloatingActionButton) findViewById(R.id.add_and_edit_ingredient_button_save);
-        nameEditText = (EditText) findViewById(R.id.add_and_edit_ingredient_name);
-        priceEditText = (EditText) findViewById(R.id.add_and_edit_ingredient_price);
-        amount = (EditText) findViewById(R.id.add_and_edit_ingredient_amount);
-        spinner = (Spinner) findViewById(R.id.add_and_edit_ingredient_amount_unit_spinner);
-        imageView = (ImageView) findViewById(R.id.add_and_edit_ingredient_picture);
-        amazon = (ImageButton) findViewById(R.id.add_and_edit_ingredient_amazon);
+        saveButton = findViewById(R.id.add_and_edit_ingredient_button_save);
+        nameEditText = findViewById(R.id.add_and_edit_ingredient_name);
+        priceEditText = findViewById(R.id.add_and_edit_ingredient_price);
+        amount = findViewById(R.id.add_and_edit_ingredient_amount);
+        spinner = findViewById(R.id.add_and_edit_ingredient_amount_unit_spinner);
+        imageView = findViewById(R.id.add_and_edit_ingredient_picture);
+        //amazon = findViewById(R.id.add_and_edit_ingredient_amazon);
 
         tempStrArray = getResources().getStringArray(R.array.string_array_units);
 
@@ -151,8 +151,8 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 float amountFloat;
 
                 try {
-                     priceFloat = Float.valueOf(priceEditText.getText().toString());
-                     amountFloat = Float.valueOf(amount.getText().toString());
+                     priceFloat = Float.parseFloat(priceEditText.getText().toString());
+                     amountFloat = Float.parseFloat(amount.getText().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                     priceFloat = 0f;
@@ -162,7 +162,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 if(!nameStr.equals("")) {
 
                     mIngredient.setName(nameStr);
-                    mIngredient.setPriceAndAmount(new Pair<Float, Float>(amountFloat, priceFloat));
+                    mIngredient.setPriceAndAmount(new Pair<>(amountFloat, priceFloat));
                     mIngredient.setUnit(spinner.toString());
 
                     if(image != null && !image.equals("")) {
@@ -217,6 +217,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
             }
         });
 
+        /*
         amazon.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -279,6 +280,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
             }
         });
+        */
     }
 
     @Override
@@ -341,7 +343,6 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                 } else {
                     // permission denied
                 }
-                return;
             }
 
         }

@@ -65,15 +65,16 @@
 
             <ImageButton
                 android:id="@+id/add_item_recipe_text_button"
-                android:layout_width="150dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/add_item_name"
                 android:layout_alignLeft="@+id/add_item_name"
                 android:layout_alignBottom="@+id/add_item_picture"
+                android:layout_toLeftOf="@+id/add_item_picture"
                 app:srcCompat="@drawable/ic_import_contacts_black_24dp"
                 tools:ignore="ContentDescription,RtlHardcoded" />
 
-            <ImageButton
+            <!--ImageButton
                 android:id="@+id/add_item_order_ingredients"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -82,7 +83,7 @@
                 android:layout_toLeftOf="@+id/add_item_picture"
                 android:layout_toRightOf="@+id/add_item_recipe_text_button"
                 app:srcCompat="@drawable/ic_shopping_cart_black_24dp"
-                tools:ignore="ContentDescription,RtlHardcoded" />
+                tools:ignore="ContentDescription,RtlHardcoded" /-->
 
         </RelativeLayout>
 
