@@ -200,15 +200,13 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
 
                         case NEW_STATE:
                             MainActivity.getManager().addRecepi(mRecipe);
+                            CURRENT_STATE = UPDATE_STATE;
                             break;
                         case UPDATE_STATE:
                             MainActivity.getManager().updateRecipe(mRecipe);
                             break;
                     }
 
-                    Intent returnIntent = new Intent();
-                    setResult(RESULT_FIRST_USER, returnIntent);
-                    finish();
                 } else {
                     name.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -342,6 +340,14 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
             }
         });
         */
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnIntent = new Intent();
+        setResult(RESULT_FIRST_USER, returnIntent);
+        finish();
     }
 
     @Override

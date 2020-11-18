@@ -179,6 +179,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
                         case NEW_STATE:
                             MainActivity.getManager().addIngredient(mIngredient);
+                            CURRENT_STATE = UPDATE_STATE;
                             break;
                         case UPDATE_STATE:
                             MainActivity.getManager().updateIngredient(mIngredient);
@@ -187,9 +188,9 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
 
                     MainActivity.getManager().generateRecipePrices();
 
-                    Intent returnIntent = new Intent();
-                    setResult(5, returnIntent);
-                    finish();
+                    //Intent returnIntent = new Intent();
+                    //setResult(5, returnIntent);
+                    //finish();
                 } else {
                     nameEditText.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -281,6 +282,14 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
             }
         });
         */
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnIntent = new Intent();
+        setResult(5, returnIntent);
+        finish();
     }
 
     @Override
