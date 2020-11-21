@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import wizardofba.rezeptverwaltung.models.Ingredient;
+import wizardofba.rezeptverwaltung.utility.Animation;
 
 public class AddAndEditIngredientActivity extends AppCompatActivity {
 
@@ -60,6 +61,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
     private Pair<Float, Float> price;
     private String image;
     private String description;
+    private boolean isChanged = false;
 
     EditText nameEditText;
     EditText priceEditText;
@@ -187,6 +189,7 @@ public class AddAndEditIngredientActivity extends AppCompatActivity {
                     }
 
                     MainActivity.getManager().generateRecipePrices();
+                    isChanged = Animation.positiveFab((FloatingActionButton) v, !isChanged);
 
                     //Intent returnIntent = new Intent();
                     //setResult(5, returnIntent);

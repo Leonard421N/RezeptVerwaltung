@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -44,6 +45,7 @@ import java.util.List;
 
 import wizardofba.rezeptverwaltung.models.Ingredient;
 import wizardofba.rezeptverwaltung.models.Recipe;
+import wizardofba.rezeptverwaltung.utility.Animation;
 import wizardofba.rezeptverwaltung.utility.IngredientAdapter;
 
 public class AddAndEditRecipeActivity extends AppCompatActivity {
@@ -68,6 +70,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
     private static IngredientAdapter ingredientAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ShareActionProvider shareActionProvider;
+    private boolean isChanged = false;
 
     private Recipe mRecipe;
 
@@ -206,6 +209,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                             MainActivity.getManager().updateRecipe(mRecipe);
                             break;
                     }
+                    isChanged = Animation.positiveFab((FloatingActionButton) v, !isChanged);
 
                 } else {
                     name.requestFocus();
@@ -304,6 +308,7 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                         // User cancelled the dialog
                     }
                 });
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -501,6 +506,14 @@ public class AddAndEditRecipeActivity extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
+        }
+    }
+
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

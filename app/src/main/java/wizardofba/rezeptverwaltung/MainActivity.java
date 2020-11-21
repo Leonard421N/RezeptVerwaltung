@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import wizardofba.rezeptverwaltung.manage.Manager;
+import wizardofba.rezeptverwaltung.utility.Animation;
 import wizardofba.rezeptverwaltung.utility.IngredientAdapter;
 import wizardofba.rezeptverwaltung.utility.RecipeAdapter;
 
